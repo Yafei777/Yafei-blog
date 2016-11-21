@@ -1,0 +1,4 @@
+Sitemap: https://github.com/Yafei777/Yafei-blog/sitemapindex.xml
+
+User-Agent: *
+Host: github.com

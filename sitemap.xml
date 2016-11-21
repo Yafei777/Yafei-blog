@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+    xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+    xmlns:xhtml="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+                        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+ <url>
+  <loc>https://github.com/Yafei777/Yafei-blog/</loc>
+  <lastmod>2016-11-21T04:36:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://github.com/Yafei777/Yafei-blog/2016/</loc>
+  <lastmod>2016-11-21T04:36:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://github.com/Yafei777/Yafei-blog/archive.html</loc>
+  <lastmod>2016-11-21T04:36:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://github.com/Yafei777/Yafei-blog/blog/jupyter-nikola-and-github/</loc>
+  <lastmod>2016-11-21T04:36:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://github.com/Yafei777/Yafei-blog/categories/</loc>
+  <lastmod>2016-11-21T04:36:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://github.com/Yafei777/Yafei-blog/galleries/</loc>
+  <lastmod>2016-11-21T04:36:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://github.com/Yafei777/Yafei-blog/listings/</loc>
+  <lastmod>2016-11-21T04:36:00Z</lastmod>
+ </url>
+</urlset>

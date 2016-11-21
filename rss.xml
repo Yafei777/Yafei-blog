@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Yafei's Blog</title><link>https://github.com/Yafei777/Yafei-blog/</link><description>This is a personal site of Yafei for sharing fun techniques and beautiful pics.</description><atom:link href="https://github.com/Yafei777/Yafei-blog/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>zh_cn</language><lastBuildDate>Mon, 21 Nov 2016 04:36:15 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Jupyter, Nikola and GitHub</title><link>https://github.com/Yafei777/Yafei-blog/blog/jupyter-nikola-and-github/</link><dc:creator>Yafei Li</dc:creator><description>&lt;div tabindex="-1" id="notebook" class="border-box-sizing"&gt;
+    &lt;div class="container" id="notebook-container"&gt;
+
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;h3 id="Jupyter-Notebook"&gt;Jupyter Notebook&lt;a class="anchor-link" href="https://github.com/Yafei777/Yafei-blog/blog/jupyter-nikola-and-github/#Jupyter-Notebook"&gt;¶&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;Jupyter notebook是一款非常好用的编辑器。
+它最大的优点在于可以在浏览器中编辑代码并即时显示出图表。&lt;/p&gt;
+&lt;h3 id="Nikola"&gt;Nikola&lt;a class="anchor-link" href="https://github.com/Yafei777/Yafei-blog/blog/jupyter-nikola-and-github/#Nikola"&gt;¶&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;Nikola是一款基于Python的静态网页生成器&lt;/p&gt;
+&lt;h3 id="GitHub"&gt;GitHub&lt;a class="anchor-link" href="https://github.com/Yafei777/Yafei-blog/blog/jupyter-nikola-and-github/#GitHub"&gt;¶&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;GitHub是托管代码网站。
+此外，GtiHub还可用于发布Nikola生成的网站。&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+</description><guid>https://github.com/Yafei777/Yafei-blog/blog/jupyter-nikola-and-github/</guid><pubDate>Mon, 21 Nov 2016 04:27:12 GMT</pubDate></item></channel></rss>
