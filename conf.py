@@ -21,10 +21,10 @@ BLOG_AUTHOR = "Yafei Li"  # (translatable)
 BLOG_TITLE = "Yafei's Blog"  # (translatable)
 # This is the main URL for your site. It will be used
 # in a prominent link. Don't forget the protocol (http/https)!
-SITE_URL = "https://github.com/Yafei777/Yafei-blog/"
+SITE_URL = "https://yafei777.github.io/Yafei-blog/"
 # This is the URL where Nikola's output will be deployed.
 # If not set, defaults to SITE_URL
-# BASE_URL = "https://github.com/Yafei777/Yafei-blog/"
+# BASE_URL = "https://yafei777.github.io/Yafei-blog/"
 BLOG_EMAIL = "yafei.li@mail.bnu.edu.cn"
 BLOG_DESCRIPTION = "This is a personal site of Yafei for sharing fun techniques and beautiful pics."  # (translatable)
 
