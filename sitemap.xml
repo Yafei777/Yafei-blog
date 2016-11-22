@@ -6,31 +6,31 @@
     xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <url>
-  <loc>https://github.com/Yafei777/Yafei-blog/</loc>
+  <loc>https://yafei777.github.io/Yafei-blog/</loc>
   <lastmod>2016-11-21T04:36:00Z</lastmod>
  </url>
  <url>
-  <loc>https://github.com/Yafei777/Yafei-blog/2016/</loc>
+  <loc>https://yafei777.github.io/Yafei-blog/2016/</loc>
   <lastmod>2016-11-21T04:36:00Z</lastmod>
  </url>
  <url>
-  <loc>https://github.com/Yafei777/Yafei-blog/archive.html</loc>
-  <lastmod>2016-11-22T02:20:00Z</lastmod>
+  <loc>https://yafei777.github.io/Yafei-blog/archive.html</loc>
+  <lastmod>2016-11-22T03:25:00Z</lastmod>
  </url>
  <url>
-  <loc>https://github.com/Yafei777/Yafei-blog/blog/jupyter-nikola-and-github/</loc>
+  <loc>https://yafei777.github.io/Yafei-blog/blog/jupyter-nikola-and-github/</loc>
   <lastmod>2016-11-21T04:36:00Z</lastmod>
  </url>
  <url>
-  <loc>https://github.com/Yafei777/Yafei-blog/categories/</loc>
+  <loc>https://yafei777.github.io/Yafei-blog/categories/</loc>
   <lastmod>2016-11-21T04:36:00Z</lastmod>
  </url>
  <url>
-  <loc>https://github.com/Yafei777/Yafei-blog/galleries/</loc>
+  <loc>https://yafei777.github.io/Yafei-blog/galleries/</loc>
   <lastmod>2016-11-21T04:36:00Z</lastmod>
  </url>
  <url>
-  <loc>https://github.com/Yafei777/Yafei-blog/listings/</loc>
+  <loc>https://yafei777.github.io/Yafei-blog/listings/</loc>
   <lastmod>2016-11-21T04:36:00Z</lastmod>
  </url>
 </urlset>
