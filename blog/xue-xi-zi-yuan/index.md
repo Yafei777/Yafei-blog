@@ -23,7 +23,7 @@ Email: yafei.li[at]mail.bnu.edu.cn
 
 ## 书籍
 
-1. 作为Python和numpy学习的入门，强力推荐[《利用Python进行数据分析》](https://item.jd.com/11352441.html)的__附录部分__。把这本书看完，Pandas也了解透了，所以数据处理的能力就没问题了。
+1. 作为Python和numpy学习的入门，强力推荐[《利用Python进行数据分析》](https://item.jd.com/11352441.html)的**附录部分**。把这本书看完，Pandas也了解透了，所以数据处理的能力就没问题了。
 2. 如果想使用Python进行机器学习或数据挖掘相关工作，推荐看中文的[《Python数据分析与挖掘实战》](https://item.jd.com/11821937.html)，更深入一点点的话推荐英文的[*Introduction to Machine Learning with Python: A Guide for Data Scientists*](https://www.amazon.com/Introduction-Machine-Learning-Python-Scientists/dp/1449369413)，这本书很新，我在2016年7月参加scipy2016会议的时候两位作者做了非常精彩的Tutorial。
 
 ## 网络资源
