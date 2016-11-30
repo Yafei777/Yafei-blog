@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Yafei's Blog">
 <meta property="og:title" content="使用Nikola建立个人网站">
 <meta property="og:url" content="https://yafei777.github.io/Yafei-blog/blog/jupyter-nikola-and-github/">
-<meta property="og:description" content="本文最近更新于: 2016-11-22
+<meta property="og:description" content="本文最近更新于: 2016-11-30
 
 Jupyter notebook是一款非常好用的编辑器。它最大的优点在于可以在浏览器中编辑代码并即时显示出图表。
 Nikola是一款基于Python的静态网页生成器
@@ -110,7 +110,7 @@ GitHub是托管代码网站。此外，GtiHub还可用于发布Nikola生成的�
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><em>本文最近更新于:</em> 2016-11-22</p>
+<p><em>本文最近更新于:</em> 2016-11-30</p>
 <ul>
 <li>Jupyter notebook是一款非常好用的编辑器。它最大的优点在于可以在浏览器中编辑代码并即时显示出图表。</li>
 <li>Nikola是一款基于Python的静态网页生成器</li>
@@ -515,6 +515,27 @@ GitHub是托管代码网站。此外，GtiHub还可用于发布Nikola生成的�
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>完成之后应该就可以在 <a href="https://USERNAME.github.io/PROJECTNAME">https://USERNAME.github.io/PROJECTNAME</a> 中看到了创建的网站和第一篇文章了！</p>
 
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="以后发布文章的操作流程">以后发布文章的操作流程<a class="anchor-link" href="#%E4%BB%A5%E5%90%8E%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0%E7%9A%84%E6%93%8D%E4%BD%9C%E6%B5%81%E7%A8%8B">¶</a>
+</h4>
+<p>以发布Markdown文件为例</p>
+<ol>
+<li>打开终端(Terminal)，激活环境：<code>source activate nikola</code>，如果是win系统：<code>activate nikola</code>。此处，nikola是我conda环境的名字，参考上文。</li>
+<li>转到网站目录，新建博文：<code>nikola new_post -f markdown</code>
+</li>
+<li>在<code>./posts/</code>目录下打开上一步创建的文件并修改。</li>
+<li>编译：<code>nikola build</code>
+</li>
+<li>发布到GitHub：<code>nikola github_deploy</code>
+</li>
+</ol>
 </div>
 </div>
 </div>
