@@ -7,15 +7,23 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <url>
   <loc>https://yafei777.github.io/Yafei-blog/</loc>
-  <lastmod>2016-11-21T04:36:00Z</lastmod>
+  <lastmod>2017-03-30T04:59:00Z</lastmod>
  </url>
  <url>
   <loc>https://yafei777.github.io/Yafei-blog/2016/</loc>
   <lastmod>2016-11-21T04:36:00Z</lastmod>
  </url>
  <url>
+  <loc>https://yafei777.github.io/Yafei-blog/2017/</loc>
+  <lastmod>2017-03-30T04:59:00Z</lastmod>
+ </url>
+ <url>
   <loc>https://yafei777.github.io/Yafei-blog/archive.html</loc>
-  <lastmod>2016-11-30T05:50:00Z</lastmod>
+  <lastmod>2017-03-30T04:59:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://yafei777.github.io/Yafei-blog/blog/ge-chong-ge-shi-di-li-xin-xi-shu-ju-du-qu-he-xian-shi/</loc>
+  <lastmod>2017-03-30T04:59:00Z</lastmod>
  </url>
  <url>
   <loc>https://yafei777.github.io/Yafei-blog/blog/jupyter-nikola-and-github/</loc>
