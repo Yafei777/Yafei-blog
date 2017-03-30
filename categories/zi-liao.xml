@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Yafei's Blog (资料)</title><link>https://yafei777.github.io/Yafei-blog/</link><description></description><atom:link rel="self" type="application/rss+xml" href="https://yafei777.github.io/Yafei-blog/categories/zi-liao.xml"></atom:link><language>zh_cn</language><lastBuildDate>Wed, 30 Nov 2016 06:08:24 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>学习资源</title><link>https://yafei777.github.io/Yafei-blog/blog/xue-xi-zi-yuan/</link><dc:creator>Yafei Li</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;em&gt;本文更新于：&lt;/em&gt;2016-11-30&lt;/p&gt;
-&lt;p&gt;中文网络世界中有很多关于使用Python进行数据分析的教程和博文，但是作为一名研究气候变化方向的博士生，我还没有找到较完美的介绍使用Python分析气候数据的中文资源。于是，我自己开了这个博客，分享一下在气候变化领域里使用Python的一些技术文章。这个博客中的所有内容都将会是我的原创而不会有转载。值得分享的文章我会在融入到我每篇文章的引用中，请读者注意点击链接浏览。如果发现链接失效，请及时跟我联系。&lt;/p&gt;
-&lt;p&gt;这篇文章是我整理自己的学习过程写出的，会不定期更新。可以在此保证，所有内容都是我认真阅读过，并认为值得推荐的。我相信很多朋友也会推荐其它的资源，所以也非常希望在这里能有一个跟大家交流的机会。&lt;/p&gt;
-&lt;p&gt;使用Python进行气候数据分析的相关技术更新很快，本博客所列内容大部分为英文，如果希望某篇感兴趣的文章被翻译成中文，可以与我联系，我愿意在业余时间联系原创作者并在获得允许后翻译。&lt;/p&gt;
-&lt;p&gt;Email: yafei.li[at]mail.bnu.edu.cn &lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Yafei's Blog (资料)</title><link>https://yafei777.github.io/Yafei-blog/</link><description></description><atom:link rel="self" type="application/rss+xml" href="https://yafei777.github.io/Yafei-blog/categories/zi-liao.xml"></atom:link><language>zh_cn</language><lastBuildDate>Thu, 30 Mar 2017 04:59:07 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>学习资源</title><link>https://yafei777.github.io/Yafei-blog/blog/xue-xi-zi-yuan/</link><dc:creator>Yafei Li</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;em&gt;本文更新于：&lt;/em&gt;2016-11-30&lt;/p&gt;
+&lt;p&gt;​   中文网络世界中有很多关于使用Python进行数据分析的教程和博文，但是作为一名研究气候变化方向的博士生，我还没有找到较完美的介绍使用Python分析气候数据的中文资源。于是，我自己开了这个博客，分享一下在气候变化领域里使用Python的一些技术文章。这个博客中的所有内容都将会是我的原创而不会有转载。值得分享的文章我会在融入到我每篇文章的引用中，请读者注意点击链接浏览。如果发现链接失效，请及时跟我联系。&lt;/p&gt;
+&lt;p&gt;​   这篇文章是我整理自己的学习过程写出的，会不定期更新。可以在此保证，所有内容都是我认真阅读过，并认为值得推荐的。我相信很多朋友也会推荐其它的资源，所以也非常希望在这里能有一个跟大家交流的机会。&lt;/p&gt;
+&lt;p&gt;​   使用Python进行气候数据分析的相关技术更新很快，本博客所列内容大部分为英文，如果希望某篇感兴趣的文章被翻译成中文，可以与我联系，我愿意在业余时间联系原创作者并在获得允许后翻译。&lt;/p&gt;
+&lt;p&gt;​   Email: yafei.li[at]mail.bnu.edu.cn &lt;/p&gt;
 &lt;h3&gt;书籍&lt;/h3&gt;
 &lt;ol&gt;
 &lt;li&gt;作为Python和numpy学习的入门，强力推荐&lt;a href="https://item.jd.com/11352441.html"&gt;《利用Python进行数据分析》&lt;/a&gt;的&lt;strong&gt;附录部分&lt;/strong&gt;。把这本书看完，Pandas也了解透了，所以数据处理的能力就没问题了。&lt;/li&gt;
@@ -27,5 +27,5 @@
 &lt;/ul&gt;
 &lt;p&gt;&lt;a href="https://ueapy.github.io/"&gt;UEA-东英吉利亚大学&lt;/a&gt;学生们交流Python使用的经验的会议日志，定期更新，很多内容适合初学者。&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href="https://yafei777.github.io/Yafei-blog/blog/xue-xi-zi-yuan/"&gt;介绍ipywidgets交互组件&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://ueapy.github.io/ipywidgetsinteract-examples.html"&gt;介绍ipywidgets交互组件&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/div&gt;</description><category>资料</category><guid>https://yafei777.github.io/Yafei-blog/blog/xue-xi-zi-yuan/</guid><pubDate>Wed, 30 Nov 2016 05:47:36 GMT</pubDate></item></channel></rss>
