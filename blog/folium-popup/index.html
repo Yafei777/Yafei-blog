@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="zh_cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Folium Popup | Yafei's Blog</title>
+<link href="../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/ipython.min.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/nikola_ipython.css" rel="stylesheet" type="text/css">
+<meta content="#5670d4" name="theme-color">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="https://yafei777.github.io/Yafei-blog/blog/folium-popup/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Yafei Li">
+<link rel="prev" href="../ge-chong-ge-shi-di-li-xin-xi-shu-ju-du-qu-he-xian-shi/" title="各种格式地理信息数据读取和显示" type="text/html">
+<meta property="og:site_name" content="Yafei's Blog">
+<meta property="og:title" content="Folium Popup">
+<meta property="og:url" content="https://yafei777.github.io/Yafei-blog/blog/folium-popup/">
+<meta property="og:description" content="Folium交互式地图及popup中文显示¶
+
+
+
+
+
+
+
+
+本文将介绍使用Folium生成交互式地图并使popup弹框支持中文显示。
+
+
+
+
+
+
+
+
+
+Folium是一个python包，可以用Python代码非常方便的生成嵌入网页的基于Leaflet的交互式地图，介绍可见主页。最简单的安装方法还是通过pip。
+
+
+
+
+
+
+
+
+
+Folium的说明文档不太完整，但是几个例子还是能把功能说明白的，主">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2017-04-12T16:26:41+08:00">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">跳到主内容</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="https://yafei777.github.io/Yafei-blog/">
+
+                <span id="blog-title">Yafei's Blog</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+            <ul class="nav navbar-nav">
+<li>
+<a href="../../archive.html">文章存档</a>
+                </li>
+<li>
+<a href="../../categories/">标签</a>
+                </li>
+<li>
+<a href="../../rss.xml">RSS 源</a>
+
+                
+            </li>
+</ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+    <a href="index.ipynb" id="sourcelink">源代码</a>
+    </li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Folium Popup</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                    Yafei Li
+            </span></p>
+            <p class="dateline"><a href="." rel="bookmark"><time class="published dt-published" datetime="2017-04-12T16:26:41+08:00" itemprop="datePublished" title="2017-04-12 16:26">2017-04-12 16:26</time></a></p>
+                <p class="commentline">
+        
+</p>
+<div class="g-commentcount" data-href="/blog/folium-popup/"></div>
+<script src="https://apis.google.com/js/plusone.js"></script><p class="sourceline"><a href="index.ipynb" id="sourcelink">源代码</a></p>
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div tabindex="-1" id="notebook" class="border-box-sizing">
+    <div class="container" id="notebook-container">
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Folium交互式地图及popup中文显示">Folium交互式地图及popup中文显示<a class="anchor-link" href="#Folium%E4%BA%A4%E4%BA%92%E5%BC%8F%E5%9C%B0%E5%9B%BE%E5%8F%8Apopup%E4%B8%AD%E6%96%87%E6%98%BE%E7%A4%BA">¶</a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>本文将介绍使用Folium生成交互式地图并使popup弹框支持<strong>中文显示</strong>。</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Folium是一个python包，可以用Python代码非常方便的生成嵌入网页的基于<a href="http://leafletjs.com/examples/quick-start/">Leaflet</a>的交互式地图，介绍可见<a href="http://folium.readthedocs.io/">主页</a>。最简单的安装方法还是通过pip。</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Folium的说明文档不太完整，但是几个例子还是能把功能说明白的，主页中就有。当然，如果出现莫名其妙的bug，就得考验大家的智慧了。在我个人的使用过程中就遇到了一个困扰很久的bug，popup弹框不能显示中文。受python4oceanographers的一篇<a href="https://ocefpaf.github.io/python4oceanographers/blog/2015/12/14/geopandas_folium/">博文</a>的启发，终于解决，在此特别感谢，并分享给中文世界的朋友们！</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>本文将通过一个应用场景尝试解决以下问题：</p>
+<ol>
+<li>找到距离某地最近的若干记录（并用公里显示距离）</li>
+<li>显示在Folium地图上（配置合适的标志）</li>
+<li>点击显示详细信息（中文！）</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="数据预处理">数据预处理<a class="anchor-link" href="#%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86">¶</a>
+</h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>首先还是下载中国气象站点数据，读入pandas并转换成十进制度，上一篇博文有介绍，不再赘述。</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s1">'SURF_CHN_MUL_HOR_STATION.xlsx'</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">min2deg</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span><span class="o">*</span><span class="mf">1.66666667</span>
+    <span class="k">return</span> <span class="n">y</span>
+
+<span class="n">data</span><span class="p">[</span><span class="s1">'经度'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">'经度'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">min2deg</span><span class="p">)</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">'纬度'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">'纬度'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">min2deg</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>整理一下数据精确的有效数字</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="p">[</span><span class="s1">'观测场拔海高度（米）'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">'观测场拔海高度（米）'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="n">data</span><span class="p">[</span><span class="s1">'纬度'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">'纬度'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">'经度'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">'经度'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[5]:</div>
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+<thead><tr style="text-align: right;">
+<th></th>
+      <th>省份</th>
+      <th>区站号</th>
+      <th>站名</th>
+      <th>纬度</th>
+      <th>经度</th>
+      <th>气压传感器拔海高度（米）</th>
+      <th>观测场拔海高度（米）</th>
+    </tr></thead>
+<tbody>
+<tr>
+<th>0</th>
+      <td>安徽</td>
+      <td>58015</td>
+      <td>砀山</td>
+      <td>34.45</td>
+      <td>116.33</td>
+      <td>45.4</td>
+      <td>44.2</td>
+    </tr>
+<tr>
+<th>1</th>
+      <td>安徽</td>
+      <td>58016</td>
+      <td>萧县</td>
+      <td>34.18</td>
+      <td>116.97</td>
+      <td>35.9</td>
+      <td>34.7</td>
+    </tr>
+<tr>
+<th>2</th>
+      <td>安徽</td>
+      <td>58102</td>
+      <td>亳州</td>
+      <td>33.87</td>
+      <td>115.77</td>
+      <td>39.2</td>
+      <td>37.7</td>
+    </tr>
+<tr>
+<th>3</th>
+      <td>安徽</td>
+      <td>58107</td>
+      <td>临泉</td>
+      <td>33.02</td>
+      <td>115.28</td>
+      <td>37.0</td>
+      <td>35.8</td>
+    </tr>
+<tr>
+<th>4</th>
+      <td>安徽</td>
+      <td>58108</td>
+      <td>界首</td>
+      <td>33.23</td>
+      <td>115.33</td>
+      <td>35.0</td>
+      <td>34.0</td>
+    </tr>
+</tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>将这个版本的数据存起来，以便下次使用</p>
+
+</div>
+</div>
+</div>data.to_csv('中国气象站点信息_decimal.csv')
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="计算两点距离（公里表示）">计算两点距离（公里表示）<a class="anchor-link" href="#%E8%AE%A1%E7%AE%97%E4%B8%A4%E7%82%B9%E8%B7%9D%E7%A6%BB%EF%BC%88%E5%85%AC%E9%87%8C%E8%A1%A8%E7%A4%BA%EF%BC%89">¶</a>
+</h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>已知两点经纬度计算两点距离有其公式，详见<a href="http://www.movable-type.co.uk/scripts/latlong.html">Movable-Type的介绍</a>（包括JS代码和网页计算器）。以下Python代码来自<a href="https://gist.github.com/rochacbruno">Bruno Rocha</a>的分享在此感谢！</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Haversine formula example in Python</span>
+<span class="c1"># Author: Wayne Dyck</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
+    <span class="n">lat1</span><span class="p">,</span> <span class="n">lon1</span> <span class="o">=</span> <span class="n">origin</span>
+    <span class="n">lat2</span><span class="p">,</span> <span class="n">lon2</span> <span class="o">=</span> <span class="n">destination</span>
+    <span class="n">radius</span> <span class="o">=</span> <span class="mi">6371</span> <span class="c1"># km</span>
+
+    <span class="n">dlat</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">lat2</span><span class="o">-</span><span class="n">lat1</span><span class="p">)</span>
+    <span class="n">dlon</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">lon2</span><span class="o">-</span><span class="n">lon1</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">dlat</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">dlat</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">lat1</span><span class="p">))</span> \
+        <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">lat2</span><span class="p">))</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">dlon</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">dlon</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">a</span><span class="p">))</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">radius</span> <span class="o">*</span> <span class="n">c</span>
+
+    <span class="k">return</span> <span class="n">d</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>赤道上1度约111公里，北纬30度附近1度越96公里：</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">distance</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[7]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>111.19492664455873</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">distance</span><span class="p">((</span><span class="mi">30</span><span class="p">,</span><span class="mi">0</span><span class="p">),(</span><span class="mi">30</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[8]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>96.29732567761188</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>用Harversine函数计算所有记录的距离：</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [9]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="p">[</span><span class="s1">'距离雄县(km)'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">r</span><span class="p">:</span><span class="n">distance</span><span class="p">((</span><span class="n">r</span><span class="p">[</span><span class="s1">'纬度'</span><span class="p">],</span><span class="n">r</span><span class="p">[</span><span class="s1">'经度'</span><span class="p">]),(</span><span class="mf">39.02</span><span class="p">,</span><span class="mf">116.10</span><span class="p">)),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>选择距离雄县50km以内的记录</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">'距离雄县(km)'</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">50</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">'距离雄县(km)'</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[10]:</div>
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+<thead><tr style="text-align: right;">
+<th></th>
+      <th>省份</th>
+      <th>区站号</th>
+      <th>站名</th>
+      <th>纬度</th>
+      <th>经度</th>
+      <th>气压传感器拔海高度（米）</th>
+      <th>观测场拔海高度（米）</th>
+      <th>距离雄县(km)</th>
+    </tr></thead>
+<tbody>
+<tr>
+<th>592</th>
+      <td>河北</td>
+      <td>54636</td>
+      <td>雄县</td>
+      <td>39.02</td>
+      <td>116.10</td>
+      <td>12.2</td>
+      <td>11.1</td>
+      <td>0.000000</td>
+    </tr>
+<tr>
+<th>569</th>
+      <td>河北</td>
+      <td>54605</td>
+      <td>安新</td>
+      <td>38.93</td>
+      <td>115.93</td>
+      <td>5.6</td>
+      <td>4.4</td>
+      <td>17.779593</td>
+    </tr>
+<tr>
+<th>546</th>
+      <td>河北</td>
+      <td>54503</td>
+      <td>容城</td>
+      <td>39.07</td>
+      <td>115.82</td>
+      <td>14.0</td>
+      <td>12.8</td>
+      <td>24.811635</td>
+    </tr>
+<tr>
+<th>552</th>
+      <td>河北</td>
+      <td>54518</td>
+      <td>霸州</td>
+      <td>39.17</td>
+      <td>116.40</td>
+      <td>10.4</td>
+      <td>8.9</td>
+      <td>30.797155</td>
+    </tr>
+<tr>
+<th>574</th>
+      <td>河北</td>
+      <td>54610</td>
+      <td>任丘</td>
+      <td>38.73</td>
+      <td>116.10</td>
+      <td>9.2</td>
+      <td>8.1</td>
+      <td>32.246529</td>
+    </tr>
+<tr>
+<th>576</th>
+      <td>河北</td>
+      <td>54612</td>
+      <td>文安</td>
+      <td>38.85</td>
+      <td>116.45</td>
+      <td>5.4</td>
+      <td>4.3</td>
+      <td>35.689976</td>
+    </tr>
+<tr>
+<th>547</th>
+      <td>河北</td>
+      <td>54506</td>
+      <td>高碑店</td>
+      <td>39.32</td>
+      <td>115.95</td>
+      <td>25.7</td>
+      <td>24.6</td>
+      <td>35.777055</td>
+    </tr>
+<tr>
+<th>565</th>
+      <td>河北</td>
+      <td>54601</td>
+      <td>徐水</td>
+      <td>38.98</td>
+      <td>115.65</td>
+      <td>14.3</td>
+      <td>13.1</td>
+      <td>39.140108</td>
+    </tr>
+<tr>
+<th>567</th>
+      <td>河北</td>
+      <td>54603</td>
+      <td>高阳</td>
+      <td>38.72</td>
+      <td>115.77</td>
+      <td>11.2</td>
+      <td>10.0</td>
+      <td>43.920144</td>
+    </tr>
+<tr>
+<th>553</th>
+      <td>河北</td>
+      <td>54519</td>
+      <td>永清</td>
+      <td>39.30</td>
+      <td>116.48</td>
+      <td>13.4</td>
+      <td>12.2</td>
+      <td>45.197136</td>
+    </tr>
+<tr>
+<th>550</th>
+      <td>河北</td>
+      <td>54512</td>
+      <td>固安</td>
+      <td>39.42</td>
+      <td>116.28</td>
+      <td>22.6</td>
+      <td>21.4</td>
+      <td>47.103376</td>
+    </tr>
+</tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>剔除雄县本身后即为要找的50km内的记录：</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [11]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">selected_st</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">'距离雄县(km)'</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">50</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">'距离雄县(km)'</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">:,:]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Folium地图显示">Folium地图显示<a class="anchor-link" href="#Folium%E5%9C%B0%E5%9B%BE%E6%98%BE%E7%A4%BA">¶</a>
+</h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Folium设置初始地图很简单，只需指定一个中心坐标。找到雄县的坐标：</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [12]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">folium</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">'站名'</span><span class="p">]</span><span class="o">==</span><span class="s1">'雄县'</span><span class="p">,[</span><span class="s1">'站名'</span><span class="p">,</span><span class="s1">'纬度'</span><span class="p">,</span><span class="s1">'经度'</span><span class="p">]]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[13]:</div>
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+<thead><tr style="text-align: right;">
+<th></th>
+      <th>站名</th>
+      <th>纬度</th>
+      <th>经度</th>
+    </tr></thead>
+<tbody><tr>
+<th>592</th>
+      <td>雄县</td>
+      <td>39.02</td>
+      <td>116.1</td>
+    </tr></tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [14]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">xmap</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="p">[</span><span class="mf">39.0</span><span class="p">,</span><span class="mf">116.1</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [15]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">xmap</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[15]:</div>
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><iframe src="data:text/html;base64,CiAgICAgICAgPCFET0NUWVBFIGh0bWw+CiAgICAgICAgPGhlYWQ+CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICA8bWV0YSBodHRwLWVxdWl2PSJjb250ZW50LXR5cGUiIGNvbnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD1VVEYtOCIgLz4KICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9sZWFmbGV0LzAuNy4zL2xlYWZsZXQuanMiPjwvc2NyaXB0PgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPHNjcmlwdCBzcmM9Imh0dHBzOi8vYWpheC5nb29nbGVhcGlzLmNvbS9hamF4L2xpYnMvanF1ZXJ5LzEuMTEuMS9qcXVlcnkubWluLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL21heGNkbi5ib290c3RyYXBjZG4uY29tL2Jvb3RzdHJhcC8zLjIuMC9qcy9ib290c3RyYXAubWluLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9MZWFmbGV0LmF3ZXNvbWUtbWFya2Vycy8yLjAuMi9sZWFmbGV0LmF3ZXNvbWUtbWFya2Vycy5taW4uanMiPjwvc2NyaXB0PgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPHNjcmlwdCBzcmM9Imh0dHBzOi8vY2RuanMuY2xvdWRmbGFyZS5jb20vYWpheC9saWJzL2xlYWZsZXQubWFya2VyY2x1c3Rlci8wLjQuMC9sZWFmbGV0Lm1hcmtlcmNsdXN0ZXItc3JjLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9sZWFmbGV0Lm1hcmtlcmNsdXN0ZXIvMC40LjAvbGVhZmxldC5tYXJrZXJjbHVzdGVyLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbS9hamF4L2xpYnMvbGVhZmxldC8wLjcuMy9sZWFmbGV0LmNzcyIgLz4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9tYXhjZG4uYm9vdHN0cmFwY2RuLmNvbS9ib290c3RyYXAvMy4yLjAvY3NzL2Jvb3RzdHJhcC5taW4uY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJodHRwczovL21heGNkbi5ib290c3RyYXBjZG4uY29tL2Jvb3RzdHJhcC8zLjIuMC9jc3MvYm9vdHN0cmFwLXRoZW1lLm1pbi5jc3MiIC8+CiAgICAgICAgCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICA8bGluayByZWw9InN0eWxlc2hlZXQiIGhyZWY9Imh0dHBzOi8vbWF4Y2RuLmJvb3RzdHJhcGNkbi5jb20vZm9udC1hd2Vzb21lLzQuMS4wL2Nzcy9mb250LWF3ZXNvbWUubWluLmNzcyIgLz4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbS9hamF4L2xpYnMvTGVhZmxldC5hd2Vzb21lLW1hcmtlcnMvMi4wLjIvbGVhZmxldC5hd2Vzb21lLW1hcmtlcnMuY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9sZWFmbGV0Lm1hcmtlcmNsdXN0ZXIvMC40LjAvTWFya2VyQ2x1c3Rlci5EZWZhdWx0LmNzcyIgLz4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbS9hamF4L2xpYnMvbGVhZmxldC5tYXJrZXJjbHVzdGVyLzAuNC4wL01hcmtlckNsdXN0ZXIuY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vcHl0aG9uLXZpc3VhbGl6YXRpb24vZm9saXVtL21hc3Rlci9mb2xpdW0vdGVtcGxhdGVzL2xlYWZsZXQuYXdlc29tZS5yb3RhdGUuY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgPHN0eWxlPgoKICAgICAgICAgICAgaHRtbCwgYm9keSB7CiAgICAgICAgICAgICAgICB3aWR0aDogMTAwJTsKICAgICAgICAgICAgICAgIGhlaWdodDogMTAwJTsKICAgICAgICAgICAgICAgIG1hcmdpbjogMDsKICAgICAgICAgICAgICAgIHBhZGRpbmc6IDA7CiAgICAgICAgICAgICAgICB9CgogICAgICAgICAgICAjbWFwIHsKICAgICAgICAgICAgICAgIHBvc2l0aW9uOmFic29sdXRlOwogICAgICAgICAgICAgICAgdG9wOjA7CiAgICAgICAgICAgICAgICBib3R0b206MDsKICAgICAgICAgICAgICAgIHJpZ2h0OjA7CiAgICAgICAgICAgICAgICBsZWZ0OjA7CiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIDwvc3R5bGU+CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgPHN0eWxlPiAjbWFwXzNmNmYwOGYwYTIzYTRlNGViYzkzN2RlNGUyY2Q3NTBlIHsKICAgICAgICAgICAgICAgIHBvc2l0aW9uIDogcmVsYXRpdmU7CiAgICAgICAgICAgICAgICB3aWR0aCA6IDEwMC4wJTsKICAgICAgICAgICAgICAgIGhlaWdodDogMTAwLjAlOwogICAgICAgICAgICAgICAgbGVmdDogMC4wJTsKICAgICAgICAgICAgICAgIHRvcDogMC4wJTsKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgPC9zdHlsZT4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICA8L2hlYWQ+CiAgICAgICAgPGJvZHk+CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgPGRpdiBjbGFzcz0iZm9saXVtLW1hcCIgaWQ9Im1hcF8zZjZmMDhmMGEyM2E0ZTRlYmM5MzdkZTRlMmNkNzUwZSIgPjwvZGl2PgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgIDwvYm9keT4KICAgICAgICA8c2NyaXB0PgogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCgogICAgICAgICAgICB2YXIgc291dGhXZXN0ID0gTC5sYXRMbmcoLTkwLCAtMTgwKTsKICAgICAgICAgICAgdmFyIG5vcnRoRWFzdCA9IEwubGF0TG5nKDkwLCAxODApOwogICAgICAgICAgICB2YXIgYm91bmRzID0gTC5sYXRMbmdCb3VuZHMoc291dGhXZXN0LCBub3J0aEVhc3QpOwoKICAgICAgICAgICAgdmFyIG1hcF8zZjZmMDhmMGEyM2E0ZTRlYmM5MzdkZTRlMmNkNzUwZSA9IEwubWFwKCdtYXBfM2Y2ZjA4ZjBhMjNhNGU0ZWJjOTM3ZGU0ZTJjZDc1MGUnLCB7CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjZW50ZXI6WzM5LjAsMTE2LjFdLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgem9vbTogMTAsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBtYXhCb3VuZHM6IGJvdW5kcywKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxheWVyczogW10sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjcnM6IEwuQ1JTLkVQU0czODU3CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfSk7CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgdmFyIHRpbGVfbGF5ZXJfOWFjZGRiY2Q4N2Y2NDU1ODk3Y2E4NTc4ZWYxM2M3N2IgPSBMLnRpbGVMYXllcigKICAgICAgICAgICAgICAgICdodHRwczovL3tzfS50aWxlLm9wZW5zdHJlZXRtYXAub3JnL3t6fS97eH0ve3l9LnBuZycsCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgbWF4Wm9vbTogMTgsCiAgICAgICAgICAgICAgICAgICAgbWluWm9vbTogMSwKICAgICAgICAgICAgICAgICAgICBhdHRyaWJ1dGlvbjogJ0RhdGEgYnkgPGEgaHJlZj0iaHR0cDovL29wZW5zdHJlZXRtYXAub3JnIj5PcGVuU3RyZWV0TWFwPC9hPiwgdW5kZXIgPGEgaHJlZj0iaHR0cDovL3d3dy5vcGVuc3RyZWV0bWFwLm9yZy9jb3B5cmlnaHQiPk9EYkw8L2E+LicsCiAgICAgICAgICAgICAgICAgICAgZGV0ZWN0UmV0aW5hOiBmYWxzZQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkuYWRkVG8obWFwXzNmNmYwOGYwYTIzYTRlNGViYzkzN2RlNGUyY2Q3NTBlKTsKCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgPC9zY3JpcHQ+CiAgICAgICAg" style="position:absolute;width:100%;height:100%;left:0;top:0;"></iframe></div></div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>在雄县这个位置添加一个标记，设置标记的图形样式：</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>这个icon的设置很有趣，可以变化出很多用途，Folium.Icon类的介绍可以通过在jupyter notebook里执行<code>Folium.Icon?</code>显示。</p>
+<p>简单说这个类可以设置color, icon_color, icon, angle, prefix这5个参数。color的可选项包括：<code>['red', 'blue', 'green', 'purple', 'orange', 'darkred', 'lightred', 'beige', 'darkblue', 'darkgreen', 'cadetblue', 'darkpurple', 'white', 'pink', 'lightblue', 'lightgreen', 'gray', 'black', 'lightgray']</code> ，或者HTML颜色代码；icon_color同上；icon可以在<a href="http://fontawesome.io/icons/">Font-Awesome网站</a>中找到对应的名字，并设置prefix参数为’fa'；最后，angle以度为单位设置。</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [16]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">icon_kw</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s1">'fa'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'orange'</span><span class="p">,</span> <span class="n">icon_color</span><span class="o">=</span><span class="s1">'darkred'</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s1">'cny'</span><span class="p">)</span>
+<span class="n">icon</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Icon</span><span class="p">(</span><span class="o">**</span><span class="n">icon_kw</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>创建一个Marker对象，然后加入xmap地图中，注意，这里popup我直接写上了汉字“雄县”：</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [17]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">folium</span><span class="o">.</span><span class="n">Marker</span><span class="p">(</span>
+    <span class="n">location</span><span class="o">=</span><span class="p">[</span><span class="mf">39.0</span><span class="p">,</span><span class="mf">116.1</span><span class="p">],</span>
+    <span class="n">popup</span><span class="o">=</span><span class="s1">'雄县'</span><span class="p">,</span>
+    <span class="n">icon</span><span class="o">=</span><span class="n">icon</span>
+<span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">xmap</span><span class="p">);</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [18]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">xmap</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[18]:</div>
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><iframe src="data:text/html;base64,CiAgICAgICAgPCFET0NUWVBFIGh0bWw+CiAgICAgICAgPGhlYWQ+CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICA8bWV0YSBodHRwLWVxdWl2PSJjb250ZW50LXR5cGUiIGNvbnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD1VVEYtOCIgLz4KICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9sZWFmbGV0LzAuNy4zL2xlYWZsZXQuanMiPjwvc2NyaXB0PgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPHNjcmlwdCBzcmM9Imh0dHBzOi8vYWpheC5nb29nbGVhcGlzLmNvbS9hamF4L2xpYnMvanF1ZXJ5LzEuMTEuMS9qcXVlcnkubWluLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL21heGNkbi5ib290c3RyYXBjZG4uY29tL2Jvb3RzdHJhcC8zLjIuMC9qcy9ib290c3RyYXAubWluLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9MZWFmbGV0LmF3ZXNvbWUtbWFya2Vycy8yLjAuMi9sZWFmbGV0LmF3ZXNvbWUtbWFya2Vycy5taW4uanMiPjwvc2NyaXB0PgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPHNjcmlwdCBzcmM9Imh0dHBzOi8vY2RuanMuY2xvdWRmbGFyZS5jb20vYWpheC9saWJzL2xlYWZsZXQubWFya2VyY2x1c3Rlci8wLjQuMC9sZWFmbGV0Lm1hcmtlcmNsdXN0ZXItc3JjLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9sZWFmbGV0Lm1hcmtlcmNsdXN0ZXIvMC40LjAvbGVhZmxldC5tYXJrZXJjbHVzdGVyLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbS9hamF4L2xpYnMvbGVhZmxldC8wLjcuMy9sZWFmbGV0LmNzcyIgLz4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9tYXhjZG4uYm9vdHN0cmFwY2RuLmNvbS9ib290c3RyYXAvMy4yLjAvY3NzL2Jvb3RzdHJhcC5taW4uY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJodHRwczovL21heGNkbi5ib290c3RyYXBjZG4uY29tL2Jvb3RzdHJhcC8zLjIuMC9jc3MvYm9vdHN0cmFwLXRoZW1lLm1pbi5jc3MiIC8+CiAgICAgICAgCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICA8bGluayByZWw9InN0eWxlc2hlZXQiIGhyZWY9Imh0dHBzOi8vbWF4Y2RuLmJvb3RzdHJhcGNkbi5jb20vZm9udC1hd2Vzb21lLzQuMS4wL2Nzcy9mb250LWF3ZXNvbWUubWluLmNzcyIgLz4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbS9hamF4L2xpYnMvTGVhZmxldC5hd2Vzb21lLW1hcmtlcnMvMi4wLjIvbGVhZmxldC5hd2Vzb21lLW1hcmtlcnMuY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9sZWFmbGV0Lm1hcmtlcmNsdXN0ZXIvMC40LjAvTWFya2VyQ2x1c3Rlci5EZWZhdWx0LmNzcyIgLz4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbS9hamF4L2xpYnMvbGVhZmxldC5tYXJrZXJjbHVzdGVyLzAuNC4wL01hcmtlckNsdXN0ZXIuY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vcHl0aG9uLXZpc3VhbGl6YXRpb24vZm9saXVtL21hc3Rlci9mb2xpdW0vdGVtcGxhdGVzL2xlYWZsZXQuYXdlc29tZS5yb3RhdGUuY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgPHN0eWxlPgoKICAgICAgICAgICAgaHRtbCwgYm9keSB7CiAgICAgICAgICAgICAgICB3aWR0aDogMTAwJTsKICAgICAgICAgICAgICAgIGhlaWdodDogMTAwJTsKICAgICAgICAgICAgICAgIG1hcmdpbjogMDsKICAgICAgICAgICAgICAgIHBhZGRpbmc6IDA7CiAgICAgICAgICAgICAgICB9CgogICAgICAgICAgICAjbWFwIHsKICAgICAgICAgICAgICAgIHBvc2l0aW9uOmFic29sdXRlOwogICAgICAgICAgICAgICAgdG9wOjA7CiAgICAgICAgICAgICAgICBib3R0b206MDsKICAgICAgICAgICAgICAgIHJpZ2h0OjA7CiAgICAgICAgICAgICAgICBsZWZ0OjA7CiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIDwvc3R5bGU+CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgPHN0eWxlPiAjbWFwXzNmNmYwOGYwYTIzYTRlNGViYzkzN2RlNGUyY2Q3NTBlIHsKICAgICAgICAgICAgICAgIHBvc2l0aW9uIDogcmVsYXRpdmU7CiAgICAgICAgICAgICAgICB3aWR0aCA6IDEwMC4wJTsKICAgICAgICAgICAgICAgIGhlaWdodDogMTAwLjAlOwogICAgICAgICAgICAgICAgbGVmdDogMC4wJTsKICAgICAgICAgICAgICAgIHRvcDogMC4wJTsKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgPC9zdHlsZT4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICA8L2hlYWQ+CiAgICAgICAgPGJvZHk+CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgPGRpdiBjbGFzcz0iZm9saXVtLW1hcCIgaWQ9Im1hcF8zZjZmMDhmMGEyM2E0ZTRlYmM5MzdkZTRlMmNkNzUwZSIgPjwvZGl2PgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgIDwvYm9keT4KICAgICAgICA8c2NyaXB0PgogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCgogICAgICAgICAgICB2YXIgc291dGhXZXN0ID0gTC5sYXRMbmcoLTkwLCAtMTgwKTsKICAgICAgICAgICAgdmFyIG5vcnRoRWFzdCA9IEwubGF0TG5nKDkwLCAxODApOwogICAgICAgICAgICB2YXIgYm91bmRzID0gTC5sYXRMbmdCb3VuZHMoc291dGhXZXN0LCBub3J0aEVhc3QpOwoKICAgICAgICAgICAgdmFyIG1hcF8zZjZmMDhmMGEyM2E0ZTRlYmM5MzdkZTRlMmNkNzUwZSA9IEwubWFwKCdtYXBfM2Y2ZjA4ZjBhMjNhNGU0ZWJjOTM3ZGU0ZTJjZDc1MGUnLCB7CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjZW50ZXI6WzM5LjAsMTE2LjFdLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgem9vbTogMTAsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBtYXhCb3VuZHM6IGJvdW5kcywKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxheWVyczogW10sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjcnM6IEwuQ1JTLkVQU0czODU3CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfSk7CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgdmFyIHRpbGVfbGF5ZXJfOWFjZGRiY2Q4N2Y2NDU1ODk3Y2E4NTc4ZWYxM2M3N2IgPSBMLnRpbGVMYXllcigKICAgICAgICAgICAgICAgICdodHRwczovL3tzfS50aWxlLm9wZW5zdHJlZXRtYXAub3JnL3t6fS97eH0ve3l9LnBuZycsCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgbWF4Wm9vbTogMTgsCiAgICAgICAgICAgICAgICAgICAgbWluWm9vbTogMSwKICAgICAgICAgICAgICAgICAgICBhdHRyaWJ1dGlvbjogJ0RhdGEgYnkgPGEgaHJlZj0iaHR0cDovL29wZW5zdHJlZXRtYXAub3JnIj5PcGVuU3RyZWV0TWFwPC9hPiwgdW5kZXIgPGEgaHJlZj0iaHR0cDovL3d3dy5vcGVuc3RyZWV0bWFwLm9yZy9jb3B5cmlnaHQiPk9EYkw8L2E+LicsCiAgICAgICAgICAgICAgICAgICAgZGV0ZWN0UmV0aW5hOiBmYWxzZQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkuYWRkVG8obWFwXzNmNmYwOGYwYTIzYTRlNGViYzkzN2RlNGUyY2Q3NTBlKTsKCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl81MzNmYjA1NGNhYWM0MDc1OTg0Nzg2MjE1ZWQ0ZDIxZSA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM5LjAsMTE2LjFdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcF8zZjZmMDhmMGEyM2E0ZTRlYmM5MzdkZTRlMmNkNzUwZSk7CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKCiAgICAgICAgICAgICAgICB2YXIgaWNvbl9iMTYzMTE3YjVmYzE0N2RkOGEyNGE4MGI3YmVkNTkzNSA9IEwuQXdlc29tZU1hcmtlcnMuaWNvbih7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogJ2NueScsCiAgICAgICAgICAgICAgICAgICAgaWNvbkNvbG9yOiAnZGFya3JlZCcsCiAgICAgICAgICAgICAgICAgICAgbWFya2VyQ29sb3I6ICdvcmFuZ2UnLAogICAgICAgICAgICAgICAgICAgIHByZWZpeDogJ2ZhJywKICAgICAgICAgICAgICAgICAgICBleHRyYUNsYXNzZXM6ICdmYS1yb3RhdGUtMCcKICAgICAgICAgICAgICAgICAgICB9KTsKICAgICAgICAgICAgICAgIG1hcmtlcl81MzNmYjA1NGNhYWM0MDc1OTg0Nzg2MjE1ZWQ0ZDIxZS5zZXRJY29uKGljb25fYjE2MzExN2I1ZmMxNDdkZDhhMjRhODBiN2JlZDU5MzUpOwogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgICAgIHZhciBwb3B1cF9iYzBjOGU0MmY1YWE0Y2E1YWVhYjI4ZjBiZDc0MDlmZCA9IEwucG9wdXAoe21heFdpZHRoOiAnMzAwJ30pOwoKICAgICAgICAgICAgCiAgICAgICAgICAgICAgICB2YXIgaHRtbF9iM2ZkMDljYTgxOTA0Yzg5OTQ4ODYxMWZiMmFlNzFhNCA9ICQoJyAgICAgICAgIDxkaXYgaWQ9Imh0bWxfYjNmZDA5Y2E4MTkwNGM4OTk0ODg2MTFmYjJhZTcxYTQiICAgICAgICAgICAgICAgICBzdHlsZT0id2lkdGg6IDEwMC4wJTsgaGVpZ2h0OiAxMDAuMCU7Ij4gICAgICAgICAgICAgICAgIOmbhOWOvzwvZGl2PiAgICAgICAgICAgICAgICAgJylbMF07CiAgICAgICAgICAgICAgICBwb3B1cF9iYzBjOGU0MmY1YWE0Y2E1YWVhYjI4ZjBiZDc0MDlmZC5zZXRDb250ZW50KGh0bWxfYjNmZDA5Y2E4MTkwNGM4OTk0ODg2MTFmYjJhZTcxYTQpOwogICAgICAgICAgICAKCiAgICAgICAgICAgIG1hcmtlcl81MzNmYjA1NGNhYWM0MDc1OTg0Nzg2MjE1ZWQ0ZDIxZS5iaW5kUG9wdXAocG9wdXBfYmMwYzhlNDJmNWFhNGNhNWFlYWIyOGYwYmQ3NDA5ZmQpOwoKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgPC9zY3JpcHQ+CiAgICAgICAg" style="position:absolute;width:100%;height:100%;left:0;top:0;"></iframe></div></div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>点击标志，发现显示的是乱码，其原因在于这里popup只能使用ascii编码。</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="中文显示">中文显示<a class="anchor-link" href="#%E4%B8%AD%E6%96%87%E6%98%BE%E7%A4%BA">¶</a>
+</h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>我们不妨先看一下系统默认编码是什么：</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [19]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">getdefaultencoding</span><span class="p">())</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>utf-8
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Folium自带一个IFrame类可以在其中嵌入html代码并解释，因此给了我们一个机会借道HTML来实现中文显示。那么首先要把汉字编码为ascii xml字符的形式。经过<em>多次试验</em>，以下函数可以实现正确显示：</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [20]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">utf2asc</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">'ascii'</span><span class="p">,</span> <span class="s1">'xmlcharrefreplace'</span><span class="p">))[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [21]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">utf2asc</span><span class="p">(</span><span class="s1">'雄县'</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[21]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>'&amp;#38596;&amp;#21439;'</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>写一个最简单的html标记：</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [22]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">heading3</span> <span class="o">=</span> <span class="s2">"""&lt;h3&gt;</span><span class="si">{}</span><span class="s2">&lt;/h3&gt;"""</span><span class="o">.</span><span class="n">format</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [23]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">heading3</span><span class="p">(</span><span class="n">utf2asc</span><span class="p">(</span><span class="s1">'雄县'</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[23]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>'&lt;h3&gt;&amp;#38596;&amp;#21439;&lt;/h3&gt;'</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [24]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">folium.element</span> <span class="k">import</span> <span class="n">IFrame</span>
+
+<span class="n">iframe</span> <span class="o">=</span> <span class="n">IFrame</span><span class="p">(</span><span class="n">html</span><span class="o">=</span><span class="n">heading3</span><span class="p">(</span><span class="n">utf2asc</span><span class="p">(</span><span class="s1">'雄县￥'</span><span class="p">)),</span><span class="n">width</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">height</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>加上一个￥以测试对中文符号的显示能力</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [25]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">popup</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Popup</span><span class="p">(</span><span class="n">iframe</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [26]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">xmap</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="p">[</span><span class="mf">39.0</span><span class="p">,</span><span class="mf">116.1</span><span class="p">])</span>
+
+<span class="n">folium</span><span class="o">.</span><span class="n">Marker</span><span class="p">(</span>
+    <span class="n">location</span><span class="o">=</span><span class="p">[</span><span class="mf">39.0</span><span class="p">,</span><span class="mf">116.1</span><span class="p">],</span>
+    <span class="n">popup</span><span class="o">=</span><span class="n">popup</span><span class="p">,</span>
+    <span class="n">icon</span><span class="o">=</span><span class="n">icon</span>
+<span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">xmap</span><span class="p">);</span>
+
+<span class="n">xmap</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[26]:</div>
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><iframe src="data:text/html;base64,CiAgICAgICAgPCFET0NUWVBFIGh0bWw+CiAgICAgICAgPGhlYWQ+CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICA8bWV0YSBodHRwLWVxdWl2PSJjb250ZW50LXR5cGUiIGNvbnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD1VVEYtOCIgLz4KICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9sZWFmbGV0LzAuNy4zL2xlYWZsZXQuanMiPjwvc2NyaXB0PgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPHNjcmlwdCBzcmM9Imh0dHBzOi8vYWpheC5nb29nbGVhcGlzLmNvbS9hamF4L2xpYnMvanF1ZXJ5LzEuMTEuMS9qcXVlcnkubWluLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL21heGNkbi5ib290c3RyYXBjZG4uY29tL2Jvb3RzdHJhcC8zLjIuMC9qcy9ib290c3RyYXAubWluLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9MZWFmbGV0LmF3ZXNvbWUtbWFya2Vycy8yLjAuMi9sZWFmbGV0LmF3ZXNvbWUtbWFya2Vycy5taW4uanMiPjwvc2NyaXB0PgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPHNjcmlwdCBzcmM9Imh0dHBzOi8vY2RuanMuY2xvdWRmbGFyZS5jb20vYWpheC9saWJzL2xlYWZsZXQubWFya2VyY2x1c3Rlci8wLjQuMC9sZWFmbGV0Lm1hcmtlcmNsdXN0ZXItc3JjLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9sZWFmbGV0Lm1hcmtlcmNsdXN0ZXIvMC40LjAvbGVhZmxldC5tYXJrZXJjbHVzdGVyLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbS9hamF4L2xpYnMvbGVhZmxldC8wLjcuMy9sZWFmbGV0LmNzcyIgLz4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9tYXhjZG4uYm9vdHN0cmFwY2RuLmNvbS9ib290c3RyYXAvMy4yLjAvY3NzL2Jvb3RzdHJhcC5taW4uY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJodHRwczovL21heGNkbi5ib290c3RyYXBjZG4uY29tL2Jvb3RzdHJhcC8zLjIuMC9jc3MvYm9vdHN0cmFwLXRoZW1lLm1pbi5jc3MiIC8+CiAgICAgICAgCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICA8bGluayByZWw9InN0eWxlc2hlZXQiIGhyZWY9Imh0dHBzOi8vbWF4Y2RuLmJvb3RzdHJhcGNkbi5jb20vZm9udC1hd2Vzb21lLzQuMS4wL2Nzcy9mb250LWF3ZXNvbWUubWluLmNzcyIgLz4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbS9hamF4L2xpYnMvTGVhZmxldC5hd2Vzb21lLW1hcmtlcnMvMi4wLjIvbGVhZmxldC5hd2Vzb21lLW1hcmtlcnMuY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9sZWFmbGV0Lm1hcmtlcmNsdXN0ZXIvMC40LjAvTWFya2VyQ2x1c3Rlci5EZWZhdWx0LmNzcyIgLz4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbS9hamF4L2xpYnMvbGVhZmxldC5tYXJrZXJjbHVzdGVyLzAuNC4wL01hcmtlckNsdXN0ZXIuY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vcHl0aG9uLXZpc3VhbGl6YXRpb24vZm9saXVtL21hc3Rlci9mb2xpdW0vdGVtcGxhdGVzL2xlYWZsZXQuYXdlc29tZS5yb3RhdGUuY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgPHN0eWxlPgoKICAgICAgICAgICAgaHRtbCwgYm9keSB7CiAgICAgICAgICAgICAgICB3aWR0aDogMTAwJTsKICAgICAgICAgICAgICAgIGhlaWdodDogMTAwJTsKICAgICAgICAgICAgICAgIG1hcmdpbjogMDsKICAgICAgICAgICAgICAgIHBhZGRpbmc6IDA7CiAgICAgICAgICAgICAgICB9CgogICAgICAgICAgICAjbWFwIHsKICAgICAgICAgICAgICAgIHBvc2l0aW9uOmFic29sdXRlOwogICAgICAgICAgICAgICAgdG9wOjA7CiAgICAgICAgICAgICAgICBib3R0b206MDsKICAgICAgICAgICAgICAgIHJpZ2h0OjA7CiAgICAgICAgICAgICAgICBsZWZ0OjA7CiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIDwvc3R5bGU+CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgPHN0eWxlPiAjbWFwX2I0MWQ2NjljYzVjMzQzOWI5Y2MxZGRmOTNmZGJiNjcwIHsKICAgICAgICAgICAgICAgIHBvc2l0aW9uIDogcmVsYXRpdmU7CiAgICAgICAgICAgICAgICB3aWR0aCA6IDEwMC4wJTsKICAgICAgICAgICAgICAgIGhlaWdodDogMTAwLjAlOwogICAgICAgICAgICAgICAgbGVmdDogMC4wJTsKICAgICAgICAgICAgICAgIHRvcDogMC4wJTsKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgPC9zdHlsZT4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICA8L2hlYWQ+CiAgICAgICAgPGJvZHk+CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgPGRpdiBjbGFzcz0iZm9saXVtLW1hcCIgaWQ9Im1hcF9iNDFkNjY5Y2M1YzM0MzliOWNjMWRkZjkzZmRiYjY3MCIgPjwvZGl2PgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgIDwvYm9keT4KICAgICAgICA8c2NyaXB0PgogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCgogICAgICAgICAgICB2YXIgc291dGhXZXN0ID0gTC5sYXRMbmcoLTkwLCAtMTgwKTsKICAgICAgICAgICAgdmFyIG5vcnRoRWFzdCA9IEwubGF0TG5nKDkwLCAxODApOwogICAgICAgICAgICB2YXIgYm91bmRzID0gTC5sYXRMbmdCb3VuZHMoc291dGhXZXN0LCBub3J0aEVhc3QpOwoKICAgICAgICAgICAgdmFyIG1hcF9iNDFkNjY5Y2M1YzM0MzliOWNjMWRkZjkzZmRiYjY3MCA9IEwubWFwKCdtYXBfYjQxZDY2OWNjNWMzNDM5YjljYzFkZGY5M2ZkYmI2NzAnLCB7CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjZW50ZXI6WzM5LjAsMTE2LjFdLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgem9vbTogMTAsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBtYXhCb3VuZHM6IGJvdW5kcywKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxheWVyczogW10sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjcnM6IEwuQ1JTLkVQU0czODU3CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfSk7CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgdmFyIHRpbGVfbGF5ZXJfMzJkMzlhMzNmNmZhNDMyMWFjNjM3NThjYTE0ZDIwNjYgPSBMLnRpbGVMYXllcigKICAgICAgICAgICAgICAgICdodHRwczovL3tzfS50aWxlLm9wZW5zdHJlZXRtYXAub3JnL3t6fS97eH0ve3l9LnBuZycsCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgbWF4Wm9vbTogMTgsCiAgICAgICAgICAgICAgICAgICAgbWluWm9vbTogMSwKICAgICAgICAgICAgICAgICAgICBhdHRyaWJ1dGlvbjogJ0RhdGEgYnkgPGEgaHJlZj0iaHR0cDovL29wZW5zdHJlZXRtYXAub3JnIj5PcGVuU3RyZWV0TWFwPC9hPiwgdW5kZXIgPGEgaHJlZj0iaHR0cDovL3d3dy5vcGVuc3RyZWV0bWFwLm9yZy9jb3B5cmlnaHQiPk9EYkw8L2E+LicsCiAgICAgICAgICAgICAgICAgICAgZGV0ZWN0UmV0aW5hOiBmYWxzZQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkuYWRkVG8obWFwX2I0MWQ2NjljYzVjMzQzOWI5Y2MxZGRmOTNmZGJiNjcwKTsKCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl8wOWQwMjQ4NWMzYmY0OWQ1OTExOWMyMGJlZDkwOTQzYSA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM5LjAsMTE2LjFdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcF9iNDFkNjY5Y2M1YzM0MzliOWNjMWRkZjkzZmRiYjY3MCk7CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKCiAgICAgICAgICAgICAgICB2YXIgaWNvbl9iMTYzMTE3YjVmYzE0N2RkOGEyNGE4MGI3YmVkNTkzNSA9IEwuQXdlc29tZU1hcmtlcnMuaWNvbih7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogJ2NueScsCiAgICAgICAgICAgICAgICAgICAgaWNvbkNvbG9yOiAnZGFya3JlZCcsCiAgICAgICAgICAgICAgICAgICAgbWFya2VyQ29sb3I6ICdvcmFuZ2UnLAogICAgICAgICAgICAgICAgICAgIHByZWZpeDogJ2ZhJywKICAgICAgICAgICAgICAgICAgICBleHRyYUNsYXNzZXM6ICdmYS1yb3RhdGUtMCcKICAgICAgICAgICAgICAgICAgICB9KTsKICAgICAgICAgICAgICAgIG1hcmtlcl8wOWQwMjQ4NWMzYmY0OWQ1OTExOWMyMGJlZDkwOTQzYS5zZXRJY29uKGljb25fYjE2MzExN2I1ZmMxNDdkZDhhMjRhODBiN2JlZDU5MzUpOwogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgICAgIHZhciBwb3B1cF8zMjY4YjliYzA0NTY0OTliYjA3MTVkMGU1ZTM2YzBkMyA9IEwucG9wdXAoe21heFdpZHRoOiAnMzAwJ30pOwoKICAgICAgICAgICAgCiAgICAgICAgICAgICAgICB2YXIgaV9mcmFtZV9jZjA2NDk1YjUxMmI0NWM1YTFiOTBkZDRjNjBkNjk2MSA9ICQoJzxpZnJhbWUgc3JjPSJkYXRhOnRleHQvaHRtbDtiYXNlNjQsQ2lBZ0lDQWdJQ0FnQ2lBZ0lDQWdJQ0FnSUNBZ0lEeG9NejRtSXpNNE5UazJPeVlqTWpFME16azdKaU0yTlRVd09UczhMMmd6UGdvZ0lDQWdJQ0FnSUFvZ0lDQWdJQ0FnSUE9PSIgd2lkdGg9IjEwMCIgaGVpZ2h0PSI1MCI+PC9pZnJhbWU+JylbMF07CiAgICAgICAgICAgICAgICBwb3B1cF8zMjY4YjliYzA0NTY0OTliYjA3MTVkMGU1ZTM2YzBkMy5zZXRDb250ZW50KGlfZnJhbWVfY2YwNjQ5NWI1MTJiNDVjNWExYjkwZGQ0YzYwZDY5NjEpOwogICAgICAgICAgICAKCiAgICAgICAgICAgIG1hcmtlcl8wOWQwMjQ4NWMzYmY0OWQ1OTExOWMyMGJlZDkwOTQzYS5iaW5kUG9wdXAocG9wdXBfMzI2OGI5YmMwNDU2NDk5YmIwNzE1ZDBlNWUzNmMwZDMpOwoKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgPC9zY3JpcHQ+CiAgICAgICAg" style="position:absolute;width:100%;height:100%;left:0;top:0;"></iframe></div></div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>此时popup可以正确显示中文及符号</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="popup美化">popup美化<a class="anchor-link" href="#popup%E7%BE%8E%E5%8C%96">¶</a>
+</h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>借鉴<a href="https://ocefpaf.github.io/python4oceanographers/blog/2015/12/14/geopandas_folium/">Filipe的博文</a>中的HTML代码以美化popup，使其呈现表格:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>列名也需要使用编码映射：</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [27]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">utf2asc</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">selected_st</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()}</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[27]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{'区站号': '&amp;#21306;&amp;#31449;&amp;#21495;',
+ '气压传感器拔海高度（米）': '&amp;#27668;&amp;#21387;&amp;#20256;&amp;#24863;&amp;#22120;&amp;#25300;&amp;#28023;&amp;#39640;&amp;#24230;&amp;#65288;&amp;#31859;&amp;#65289;',
+ '省份': '&amp;#30465;&amp;#20221;',
+ '站名': '&amp;#31449;&amp;#21517;',
+ '纬度': '&amp;#32428;&amp;#24230;',
+ '经度': '&amp;#32463;&amp;#24230;',
+ '观测场拔海高度（米）': '&amp;#35266;&amp;#27979;&amp;#22330;&amp;#25300;&amp;#28023;&amp;#39640;&amp;#24230;&amp;#65288;&amp;#31859;&amp;#65289;',
+ '距离雄县(km)': '&amp;#36317;&amp;#31163;&amp;#38596;&amp;#21439;(km)'}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>popup中的HTML，以站名、站号、观测场海拔的顺序构建列表，注意看<code>&lt;tr&gt;</code>部分</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [28]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">table</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">&lt;!DOCTYPE html&gt;</span>
+<span class="s2">&lt;html&gt;</span>
+<span class="s2">&lt;head&gt;</span>
+<span class="s2">&lt;style&gt;</span>
+<span class="s2">table {{</span>
+<span class="s2">    width:100%;</span>
+<span class="s2">}}</span>
+<span class="s2">table, th, td {{</span>
+<span class="s2">    border: 1px solid black;</span>
+<span class="s2">    border-collapse: collapse;</span>
+<span class="s2">}}</span>
+<span class="s2">th, td {{</span>
+<span class="s2">    padding: 5px;</span>
+<span class="s2">    text-align: left;</span>
+<span class="s2">}}</span>
+<span class="s2">table#t01 tr:nth-child(odd) {{</span>
+<span class="s2">    background-color: #eee;</span>
+<span class="s2">}}</span>
+<span class="s2">table#t01 tr:nth-child(even) {{</span>
+<span class="s2">   background-color:#fff;</span>
+<span class="s2">}}</span>
+<span class="s2">&lt;/style&gt;</span>
+<span class="s2">&lt;/head&gt;</span>
+<span class="s2">&lt;body&gt;</span>
+
+<span class="s2">&lt;table id="t01"&gt;</span>
+<span class="s2">  &lt;tr&gt;</span>
+<span class="s2">    &lt;td&gt;&amp;#31449;&amp;#21517;&lt;/td&gt;</span>
+<span class="s2">    &lt;td&gt;</span><span class="si">{}</span><span class="s2">&lt;/td&gt;</span>
+<span class="s2">  &lt;/tr&gt;</span>
+<span class="s2">  &lt;tr&gt;</span>
+<span class="s2">    &lt;td&gt;&amp;#21306;&amp;#31449;&amp;#21495;&lt;/td&gt;</span>
+<span class="s2">    &lt;td&gt;</span><span class="si">{}</span><span class="s2">&lt;/td&gt;</span>
+<span class="s2">  &lt;/tr&gt;</span>
+<span class="s2">  &lt;tr&gt;</span>
+<span class="s2">    &lt;td&gt;&amp;#35266;&amp;#27979;&amp;#22330;&amp;#25300;&amp;#28023;&amp;#39640;&amp;#24230;&amp;#65288;&amp;#31859;&amp;#65289;&lt;/td&gt;</span>
+<span class="s2">    &lt;td&gt;</span><span class="si">{}</span><span class="s2">&lt;/td&gt;</span>
+<span class="s2">  &lt;/tr&gt;</span>
+<span class="s2">&lt;/table&gt;</span>
+<span class="s2">&lt;/body&gt;</span>
+<span class="s2">&lt;/html&gt;</span>
+<span class="s2">"""</span><span class="o">.</span><span class="n">format</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>循环列表各行，将信息添加进地图：</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [29]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">selected_st</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    
+    <span class="n">iframe</span> <span class="o">=</span> <span class="n">IFrame</span><span class="p">(</span><span class="n">html</span><span class="o">=</span><span class="n">table</span><span class="p">(</span><span class="n">utf2asc</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="s1">'站名'</span><span class="p">]),</span><span class="n">utf2asc</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="s1">'区站号'</span><span class="p">]),</span><span class="n">utf2asc</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="s1">'观测场拔海高度（米）'</span><span class="p">]))</span>
+                    <span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="mi">310</span><span class="p">,</span><span class="n">height</span><span class="o">=</span><span class="mi">130</span><span class="p">)</span>
+    <span class="n">popup</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Popup</span><span class="p">(</span><span class="n">iframe</span><span class="p">,</span><span class="n">max_width</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
+    
+    <span class="n">folium</span><span class="o">.</span><span class="n">Marker</span><span class="p">(</span>
+        <span class="n">location</span><span class="o">=</span><span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">纬度</span><span class="p">,</span><span class="n">v</span><span class="o">.</span><span class="n">经度</span><span class="p">],</span>
+        <span class="n">popup</span><span class="o">=</span><span class="n">popup</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">xmap</span><span class="p">);</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [30]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">xmap</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[30]:</div>
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><iframe src="data:text/html;base64,CiAgICAgICAgPCFET0NUWVBFIGh0bWw+CiAgICAgICAgPGhlYWQ+CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICA8bWV0YSBodHRwLWVxdWl2PSJjb250ZW50LXR5cGUiIGNvbnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD1VVEYtOCIgLz4KICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9sZWFmbGV0LzAuNy4zL2xlYWZsZXQuanMiPjwvc2NyaXB0PgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPHNjcmlwdCBzcmM9Imh0dHBzOi8vYWpheC5nb29nbGVhcGlzLmNvbS9hamF4L2xpYnMvanF1ZXJ5LzEuMTEuMS9qcXVlcnkubWluLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL21heGNkbi5ib290c3RyYXBjZG4uY29tL2Jvb3RzdHJhcC8zLjIuMC9qcy9ib290c3RyYXAubWluLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9MZWFmbGV0LmF3ZXNvbWUtbWFya2Vycy8yLjAuMi9sZWFmbGV0LmF3ZXNvbWUtbWFya2Vycy5taW4uanMiPjwvc2NyaXB0PgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPHNjcmlwdCBzcmM9Imh0dHBzOi8vY2RuanMuY2xvdWRmbGFyZS5jb20vYWpheC9saWJzL2xlYWZsZXQubWFya2VyY2x1c3Rlci8wLjQuMC9sZWFmbGV0Lm1hcmtlcmNsdXN0ZXItc3JjLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9sZWFmbGV0Lm1hcmtlcmNsdXN0ZXIvMC40LjAvbGVhZmxldC5tYXJrZXJjbHVzdGVyLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbS9hamF4L2xpYnMvbGVhZmxldC8wLjcuMy9sZWFmbGV0LmNzcyIgLz4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9tYXhjZG4uYm9vdHN0cmFwY2RuLmNvbS9ib290c3RyYXAvMy4yLjAvY3NzL2Jvb3RzdHJhcC5taW4uY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJodHRwczovL21heGNkbi5ib290c3RyYXBjZG4uY29tL2Jvb3RzdHJhcC8zLjIuMC9jc3MvYm9vdHN0cmFwLXRoZW1lLm1pbi5jc3MiIC8+CiAgICAgICAgCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICA8bGluayByZWw9InN0eWxlc2hlZXQiIGhyZWY9Imh0dHBzOi8vbWF4Y2RuLmJvb3RzdHJhcGNkbi5jb20vZm9udC1hd2Vzb21lLzQuMS4wL2Nzcy9mb250LWF3ZXNvbWUubWluLmNzcyIgLz4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbS9hamF4L2xpYnMvTGVhZmxldC5hd2Vzb21lLW1hcmtlcnMvMi4wLjIvbGVhZmxldC5hd2Vzb21lLW1hcmtlcnMuY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9sZWFmbGV0Lm1hcmtlcmNsdXN0ZXIvMC40LjAvTWFya2VyQ2x1c3Rlci5EZWZhdWx0LmNzcyIgLz4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbS9hamF4L2xpYnMvbGVhZmxldC5tYXJrZXJjbHVzdGVyLzAuNC4wL01hcmtlckNsdXN0ZXIuY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vcHl0aG9uLXZpc3VhbGl6YXRpb24vZm9saXVtL21hc3Rlci9mb2xpdW0vdGVtcGxhdGVzL2xlYWZsZXQuYXdlc29tZS5yb3RhdGUuY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgPHN0eWxlPgoKICAgICAgICAgICAgaHRtbCwgYm9keSB7CiAgICAgICAgICAgICAgICB3aWR0aDogMTAwJTsKICAgICAgICAgICAgICAgIGhlaWdodDogMTAwJTsKICAgICAgICAgICAgICAgIG1hcmdpbjogMDsKICAgICAgICAgICAgICAgIHBhZGRpbmc6IDA7CiAgICAgICAgICAgICAgICB9CgogICAgICAgICAgICAjbWFwIHsKICAgICAgICAgICAgICAgIHBvc2l0aW9uOmFic29sdXRlOwogICAgICAgICAgICAgICAgdG9wOjA7CiAgICAgICAgICAgICAgICBib3R0b206MDsKICAgICAgICAgICAgICAgIHJpZ2h0OjA7CiAgICAgICAgICAgICAgICBsZWZ0OjA7CiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIDwvc3R5bGU+CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgPHN0eWxlPiAjbWFwX2I0MWQ2NjljYzVjMzQzOWI5Y2MxZGRmOTNmZGJiNjcwIHsKICAgICAgICAgICAgICAgIHBvc2l0aW9uIDogcmVsYXRpdmU7CiAgICAgICAgICAgICAgICB3aWR0aCA6IDEwMC4wJTsKICAgICAgICAgICAgICAgIGhlaWdodDogMTAwLjAlOwogICAgICAgICAgICAgICAgbGVmdDogMC4wJTsKICAgICAgICAgICAgICAgIHRvcDogMC4wJTsKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgPC9zdHlsZT4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICA8L2hlYWQ+CiAgICAgICAgPGJvZHk+CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgPGRpdiBjbGFzcz0iZm9saXVtLW1hcCIgaWQ9Im1hcF9iNDFkNjY5Y2M1YzM0MzliOWNjMWRkZjkzZmRiYjY3MCIgPjwvZGl2PgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgIDwvYm9keT4KICAgICAgICA8c2NyaXB0PgogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCgogICAgICAgICAgICB2YXIgc291dGhXZXN0ID0gTC5sYXRMbmcoLTkwLCAtMTgwKTsKICAgICAgICAgICAgdmFyIG5vcnRoRWFzdCA9IEwubGF0TG5nKDkwLCAxODApOwogICAgICAgICAgICB2YXIgYm91bmRzID0gTC5sYXRMbmdCb3VuZHMoc291dGhXZXN0LCBub3J0aEVhc3QpOwoKICAgICAgICAgICAgdmFyIG1hcF9iNDFkNjY5Y2M1YzM0MzliOWNjMWRkZjkzZmRiYjY3MCA9IEwubWFwKCdtYXBfYjQxZDY2OWNjNWMzNDM5YjljYzFkZGY5M2ZkYmI2NzAnLCB7CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjZW50ZXI6WzM5LjAsMTE2LjFdLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgem9vbTogMTAsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBtYXhCb3VuZHM6IGJvdW5kcywKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxheWVyczogW10sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjcnM6IEwuQ1JTLkVQU0czODU3CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfSk7CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgdmFyIHRpbGVfbGF5ZXJfMzJkMzlhMzNmNmZhNDMyMWFjNjM3NThjYTE0ZDIwNjYgPSBMLnRpbGVMYXllcigKICAgICAgICAgICAgICAgICdodHRwczovL3tzfS50aWxlLm9wZW5zdHJlZXRtYXAub3JnL3t6fS97eH0ve3l9LnBuZycsCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgbWF4Wm9vbTogMTgsCiAgICAgICAgICAgICAgICAgICAgbWluWm9vbTogMSwKICAgICAgICAgICAgICAgICAgICBhdHRyaWJ1dGlvbjogJ0RhdGEgYnkgPGEgaHJlZj0iaHR0cDovL29wZW5zdHJlZXRtYXAub3JnIj5PcGVuU3RyZWV0TWFwPC9hPiwgdW5kZXIgPGEgaHJlZj0iaHR0cDovL3d3dy5vcGVuc3RyZWV0bWFwLm9yZy9jb3B5cmlnaHQiPk9EYkw8L2E+LicsCiAgICAgICAgICAgICAgICAgICAgZGV0ZWN0UmV0aW5hOiBmYWxzZQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkuYWRkVG8obWFwX2I0MWQ2NjljYzVjMzQzOWI5Y2MxZGRmOTNmZGJiNjcwKTsKCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl8wOWQwMjQ4NWMzYmY0OWQ1OTExOWMyMGJlZDkwOTQzYSA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM5LjAsMTE2LjFdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcF9iNDFkNjY5Y2M1YzM0MzliOWNjMWRkZjkzZmRiYjY3MCk7CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKCiAgICAgICAgICAgICAgICB2YXIgaWNvbl9iMTYzMTE3YjVmYzE0N2RkOGEyNGE4MGI3YmVkNTkzNSA9IEwuQXdlc29tZU1hcmtlcnMuaWNvbih7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogJ2NueScsCiAgICAgICAgICAgICAgICAgICAgaWNvbkNvbG9yOiAnZGFya3JlZCcsCiAgICAgICAgICAgICAgICAgICAgbWFya2VyQ29sb3I6ICdvcmFuZ2UnLAogICAgICAgICAgICAgICAgICAgIHByZWZpeDogJ2ZhJywKICAgICAgICAgICAgICAgICAgICBleHRyYUNsYXNzZXM6ICdmYS1yb3RhdGUtMCcKICAgICAgICAgICAgICAgICAgICB9KTsKICAgICAgICAgICAgICAgIG1hcmtlcl8wOWQwMjQ4NWMzYmY0OWQ1OTExOWMyMGJlZDkwOTQzYS5zZXRJY29uKGljb25fYjE2MzExN2I1ZmMxNDdkZDhhMjRhODBiN2JlZDU5MzUpOwogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgICAgIHZhciBwb3B1cF8zMjY4YjliYzA0NTY0OTliYjA3MTVkMGU1ZTM2YzBkMyA9IEwucG9wdXAoe21heFdpZHRoOiAnMzAwJ30pOwoKICAgICAgICAgICAgCiAgICAgICAgICAgICAgICB2YXIgaV9mcmFtZV9jZjA2NDk1YjUxMmI0NWM1YTFiOTBkZDRjNjBkNjk2MSA9ICQoJzxpZnJhbWUgc3JjPSJkYXRhOnRleHQvaHRtbDtiYXNlNjQsQ2lBZ0lDQWdJQ0FnQ2lBZ0lDQWdJQ0FnSUNBZ0lEeG9NejRtSXpNNE5UazJPeVlqTWpFME16azdKaU0yTlRVd09UczhMMmd6UGdvZ0lDQWdJQ0FnSUFvZ0lDQWdJQ0FnSUE9PSIgd2lkdGg9IjEwMCIgaGVpZ2h0PSI1MCI+PC9pZnJhbWU+JylbMF07CiAgICAgICAgICAgICAgICBwb3B1cF8zMjY4YjliYzA0NTY0OTliYjA3MTVkMGU1ZTM2YzBkMy5zZXRDb250ZW50KGlfZnJhbWVfY2YwNjQ5NWI1MTJiNDVjNWExYjkwZGQ0YzYwZDY5NjEpOwogICAgICAgICAgICAKCiAgICAgICAgICAgIG1hcmtlcl8wOWQwMjQ4NWMzYmY0OWQ1OTExOWMyMGJlZDkwOTQzYS5iaW5kUG9wdXAocG9wdXBfMzI2OGI5YmMwNDU2NDk5YmIwNzE1ZDBlNWUzNmMwZDMpOwoKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl84MTY5NDU0OTVlMjM0NjUwOTJiM2VmMWJmOGEwNGFiMiA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM4LjkzLDExNS45M10sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFwX2I0MWQ2NjljYzVjMzQzOWI5Y2MxZGRmOTNmZGJiNjcwKTsKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIAogICAgICAgICAgICB2YXIgcG9wdXBfYzc0NWJhZmNmYzVmNGRjZmIwOGMzNzAxZGIwY2U3MmYgPSBMLnBvcHVwKHttYXhXaWR0aDogJzQwMCd9KTsKCiAgICAgICAgICAgIAogICAgICAgICAgICAgICAgdmFyIGlfZnJhbWVfZDliMWY1OGZiNGIyNGI4ZmJmYzU4YmQ2YmUzMmUxYWMgPSAkKCc8aWZyYW1lIHNyYz0iZGF0YTp0ZXh0L2h0bWw7YmFzZTY0LENpQWdJQ0FnSUNBZ0NpQWdJQ0FnSUNBZ0lDQWdJQW84SVVSUFExUlpVRVVnYUhSdGJENEtQR2gwYld3K0NqeG9aV0ZrUGdvOGMzUjViR1UrQ25SaFlteGxJSHNLSUNBZ0lIZHBaSFJvT2pFd01DVTdDbjBLZEdGaWJHVXNJSFJvTENCMFpDQjdDaUFnSUNCaWIzSmtaWEk2SURGd2VDQnpiMnhwWkNCaWJHRmphenNLSUNBZ0lHSnZjbVJsY2kxamIyeHNZWEJ6WlRvZ1kyOXNiR0Z3YzJVN0NuMEtkR2dzSUhSa0lIc0tJQ0FnSUhCaFpHUnBibWM2SURWd2VEc0tJQ0FnSUhSbGVIUXRZV3hwWjI0NklHeGxablE3Q24wS2RHRmliR1VqZERBeElIUnlPbTUwYUMxamFHbHNaQ2h2WkdRcElIc0tJQ0FnSUdKaFkydG5jbTkxYm1RdFkyOXNiM0k2SUNObFpXVTdDbjBLZEdGaWJHVWpkREF4SUhSeU9tNTBhQzFqYUdsc1pDaGxkbVZ1S1NCN0NpQWdJR0poWTJ0bmNtOTFibVF0WTI5c2IzSTZJMlptWmpzS2ZRbzhMM04wZVd4bFBnbzhMMmhsWVdRK0NqeGliMlI1UGdvS1BIUmhZbXhsSUdsa1BTSjBNREVpUGdvZ0lEeDBjajRLSUNBZ0lEeDBaRDRtSXpNeE5EUTVPeVlqTWpFMU1UYzdQQzkwWkQ0S0lDQWdJRHgwWkQ0bUl6SXpORE16T3lZak1qWXdNekk3UEM5MFpENEtJQ0E4TDNSeVBnb2dJRHgwY2o0S0lDQWdJRHgwWkQ0bUl6SXhNekEyT3lZak16RTBORGs3SmlNeU1UUTVOVHM4TDNSa1Bnb2dJQ0FnUEhSa1BqVTBOakExUEM5MFpENEtJQ0E4TDNSeVBnb2dJRHgwY2o0S0lDQWdJRHgwWkQ0bUl6TTFNalkyT3lZak1qYzVOems3SmlNeU1qTXpNRHNtSXpJMU16QXdPeVlqTWpnd01qTTdKaU16T1RZME1Ec21JekkwTWpNd095WWpOalV5T0RnN0ppTXpNVGcxT1RzbUl6WTFNamc1T3p3dmRHUStDaUFnSUNBOGRHUStOQzQwUEM5MFpENEtJQ0E4TDNSeVBnbzhMM1JoWW14bFBnbzhMMkp2WkhrK0Nqd3ZhSFJ0YkQ0S0lDQWdJQ0FnSUNBS0lDQWdJQ0FnSUNBPSIgd2lkdGg9IjMxMCIgaGVpZ2h0PSIxMzAiPjwvaWZyYW1lPicpWzBdOwogICAgICAgICAgICAgICAgcG9wdXBfYzc0NWJhZmNmYzVmNGRjZmIwOGMzNzAxZGIwY2U3MmYuc2V0Q29udGVudChpX2ZyYW1lX2Q5YjFmNThmYjRiMjRiOGZiZmM1OGJkNmJlMzJlMWFjKTsKICAgICAgICAgICAgCgogICAgICAgICAgICBtYXJrZXJfODE2OTQ1NDk1ZTIzNDY1MDkyYjNlZjFiZjhhMDRhYjIuYmluZFBvcHVwKHBvcHVwX2M3NDViYWZjZmM1ZjRkY2ZiMDhjMzcwMWRiMGNlNzJmKTsKCiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfZDZlNDA1ZTIxZWZkNGRhNzk1MTVlMjBkZmJlOWEzMWQgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFszOS4wNywxMTUuODJdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcF9iNDFkNjY5Y2M1YzM0MzliOWNjMWRkZjkzZmRiYjY3MCk7CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgdmFyIHBvcHVwXzA0ZTBmYTBmMDE4MTQ3NDM4NTk3MzQ2MGI3ZDFiNGFjID0gTC5wb3B1cCh7bWF4V2lkdGg6ICc0MDAnfSk7CgogICAgICAgICAgICAKICAgICAgICAgICAgICAgIHZhciBpX2ZyYW1lXzQ2MzU2NjMxNGY1YzQzYTk4MTE1NWY5ZTNiM2NjYjAwID0gJCgnPGlmcmFtZSBzcmM9ImRhdGE6dGV4dC9odG1sO2Jhc2U2NCxDaUFnSUNBZ0lDQWdDaUFnSUNBZ0lDQWdJQ0FnSUFvOElVUlBRMVJaVUVVZ2FIUnRiRDRLUEdoMGJXdytDanhvWldGa1BnbzhjM1I1YkdVK0NuUmhZbXhsSUhzS0lDQWdJSGRwWkhSb09qRXdNQ1U3Q24wS2RHRmliR1VzSUhSb0xDQjBaQ0I3Q2lBZ0lDQmliM0prWlhJNklERndlQ0J6YjJ4cFpDQmliR0ZqYXpzS0lDQWdJR0p2Y21SbGNpMWpiMnhzWVhCelpUb2dZMjlzYkdGd2MyVTdDbjBLZEdnc0lIUmtJSHNLSUNBZ0lIQmhaR1JwYm1jNklEVndlRHNLSUNBZ0lIUmxlSFF0WVd4cFoyNDZJR3hsWm5RN0NuMEtkR0ZpYkdVamREQXhJSFJ5T201MGFDMWphR2xzWkNodlpHUXBJSHNLSUNBZ0lHSmhZMnRuY205MWJtUXRZMjlzYjNJNklDTmxaV1U3Q24wS2RHRmliR1VqZERBeElIUnlPbTUwYUMxamFHbHNaQ2hsZG1WdUtTQjdDaUFnSUdKaFkydG5jbTkxYm1RdFkyOXNiM0k2STJabVpqc0tmUW84TDNOMGVXeGxQZ284TDJobFlXUStDanhpYjJSNVBnb0tQSFJoWW14bElHbGtQU0owTURFaVBnb2dJRHgwY2o0S0lDQWdJRHgwWkQ0bUl6TXhORFE1T3lZak1qRTFNVGM3UEM5MFpENEtJQ0FnSUR4MFpENG1Jekl6TkRneE95WWpNakkwTnpnN1BDOTBaRDRLSUNBOEwzUnlQZ29nSUR4MGNqNEtJQ0FnSUR4MFpENG1Jekl4TXpBMk95WWpNekUwTkRrN0ppTXlNVFE1TlRzOEwzUmtQZ29nSUNBZ1BIUmtQalUwTlRBelBDOTBaRDRLSUNBOEwzUnlQZ29nSUR4MGNqNEtJQ0FnSUR4MFpENG1Jek0xTWpZMk95WWpNamM1TnprN0ppTXlNak16TURzbUl6STFNekF3T3lZak1qZ3dNak03SmlNek9UWTBNRHNtSXpJME1qTXdPeVlqTmpVeU9EZzdKaU16TVRnMU9Uc21JelkxTWpnNU96d3ZkR1ErQ2lBZ0lDQThkR1ErTVRJdU9Ed3ZkR1ErQ2lBZ1BDOTBjajRLUEM5MFlXSnNaVDRLUEM5aWIyUjVQZ284TDJoMGJXdytDaUFnSUNBZ0lDQWdDaUFnSUNBZ0lDQWciIHdpZHRoPSIzMTAiIGhlaWdodD0iMTMwIj48L2lmcmFtZT4nKVswXTsKICAgICAgICAgICAgICAgIHBvcHVwXzA0ZTBmYTBmMDE4MTQ3NDM4NTk3MzQ2MGI3ZDFiNGFjLnNldENvbnRlbnQoaV9mcmFtZV80NjM1NjYzMTRmNWM0M2E5ODExNTVmOWUzYjNjY2IwMCk7CiAgICAgICAgICAgIAoKICAgICAgICAgICAgbWFya2VyX2Q2ZTQwNWUyMWVmZDRkYTc5NTE1ZTIwZGZiZTlhMzFkLmJpbmRQb3B1cChwb3B1cF8wNGUwZmEwZjAxODE0NzQzODU5NzM0NjBiN2QxYjRhYyk7CgogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzE5Y2FjYjJjMjQ0MjRmNDdhZjRlN2UyNGNjZDUyZDAyID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbMzkuMTcsMTE2LjRdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcF9iNDFkNjY5Y2M1YzM0MzliOWNjMWRkZjkzZmRiYjY3MCk7CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgdmFyIHBvcHVwXzRmZmNmYTA4MmRhZjRkMGM4ZmY2Njc4YzA0YzgwNDNiID0gTC5wb3B1cCh7bWF4V2lkdGg6ICc0MDAnfSk7CgogICAgICAgICAgICAKICAgICAgICAgICAgICAgIHZhciBpX2ZyYW1lXzc4MjM0MzI4MTQyZjQ5MTliNTJkZDE3YjQyZTYxMDY1ID0gJCgnPGlmcmFtZSBzcmM9ImRhdGE6dGV4dC9odG1sO2Jhc2U2NCxDaUFnSUNBZ0lDQWdDaUFnSUNBZ0lDQWdJQ0FnSUFvOElVUlBRMVJaVUVVZ2FIUnRiRDRLUEdoMGJXdytDanhvWldGa1BnbzhjM1I1YkdVK0NuUmhZbXhsSUhzS0lDQWdJSGRwWkhSb09qRXdNQ1U3Q24wS2RHRmliR1VzSUhSb0xDQjBaQ0I3Q2lBZ0lDQmliM0prWlhJNklERndlQ0J6YjJ4cFpDQmliR0ZqYXpzS0lDQWdJR0p2Y21SbGNpMWpiMnhzWVhCelpUb2dZMjlzYkdGd2MyVTdDbjBLZEdnc0lIUmtJSHNLSUNBZ0lIQmhaR1JwYm1jNklEVndlRHNLSUNBZ0lIUmxlSFF0WVd4cFoyNDZJR3hsWm5RN0NuMEtkR0ZpYkdVamREQXhJSFJ5T201MGFDMWphR2xzWkNodlpHUXBJSHNLSUNBZ0lHSmhZMnRuY205MWJtUXRZMjlzYjNJNklDTmxaV1U3Q24wS2RHRmliR1VqZERBeElIUnlPbTUwYUMxamFHbHNaQ2hsZG1WdUtTQjdDaUFnSUdKaFkydG5jbTkxYm1RdFkyOXNiM0k2STJabVpqc0tmUW84TDNOMGVXeGxQZ284TDJobFlXUStDanhpYjJSNVBnb0tQSFJoWW14bElHbGtQU0owTURFaVBnb2dJRHgwY2o0S0lDQWdJRHgwWkQ0bUl6TXhORFE1T3lZak1qRTFNVGM3UEM5MFpENEtJQ0FnSUR4MFpENG1Jek00TnpFeU95WWpNalF3TXpBN1BDOTBaRDRLSUNBOEwzUnlQZ29nSUR4MGNqNEtJQ0FnSUR4MFpENG1Jekl4TXpBMk95WWpNekUwTkRrN0ppTXlNVFE1TlRzOEwzUmtQZ29nSUNBZ1BIUmtQalUwTlRFNFBDOTBaRDRLSUNBOEwzUnlQZ29nSUR4MGNqNEtJQ0FnSUR4MFpENG1Jek0xTWpZMk95WWpNamM1TnprN0ppTXlNak16TURzbUl6STFNekF3T3lZak1qZ3dNak03SmlNek9UWTBNRHNtSXpJME1qTXdPeVlqTmpVeU9EZzdKaU16TVRnMU9Uc21JelkxTWpnNU96d3ZkR1ErQ2lBZ0lDQThkR1ErT0M0NVBDOTBaRDRLSUNBOEwzUnlQZ284TDNSaFlteGxQZ284TDJKdlpIaytDand2YUhSdGJENEtJQ0FnSUNBZ0lDQUtJQ0FnSUNBZ0lDQT0iIHdpZHRoPSIzMTAiIGhlaWdodD0iMTMwIj48L2lmcmFtZT4nKVswXTsKICAgICAgICAgICAgICAgIHBvcHVwXzRmZmNmYTA4MmRhZjRkMGM4ZmY2Njc4YzA0YzgwNDNiLnNldENvbnRlbnQoaV9mcmFtZV83ODIzNDMyODE0MmY0OTE5YjUyZGQxN2I0MmU2MTA2NSk7CiAgICAgICAgICAgIAoKICAgICAgICAgICAgbWFya2VyXzE5Y2FjYjJjMjQ0MjRmNDdhZjRlN2UyNGNjZDUyZDAyLmJpbmRQb3B1cChwb3B1cF80ZmZjZmEwODJkYWY0ZDBjOGZmNjY3OGMwNGM4MDQzYik7CgogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCgogICAgICAgICAgICB2YXIgbWFya2VyX2I0NTU4MDE0OTY1ODQwNjY5MjdjYTU2OTgwMGRiZjk4ID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbMzguNzMsMTE2LjFdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcF9iNDFkNjY5Y2M1YzM0MzliOWNjMWRkZjkzZmRiYjY3MCk7CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgdmFyIHBvcHVwX2MzYzUwZWU5YTEwMjQyZDI5YmMzOTk1NGQxMzhkMjJlID0gTC5wb3B1cCh7bWF4V2lkdGg6ICc0MDAnfSk7CgogICAgICAgICAgICAKICAgICAgICAgICAgICAgIHZhciBpX2ZyYW1lXzdiOGYzOWI4NTQzNDRkODE5N2Q3MTM0Y2QxOWVmYjU1ID0gJCgnPGlmcmFtZSBzcmM9ImRhdGE6dGV4dC9odG1sO2Jhc2U2NCxDaUFnSUNBZ0lDQWdDaUFnSUNBZ0lDQWdJQ0FnSUFvOElVUlBRMVJaVUVVZ2FIUnRiRDRLUEdoMGJXdytDanhvWldGa1BnbzhjM1I1YkdVK0NuUmhZbXhsSUhzS0lDQWdJSGRwWkhSb09qRXdNQ1U3Q24wS2RHRmliR1VzSUhSb0xDQjBaQ0I3Q2lBZ0lDQmliM0prWlhJNklERndlQ0J6YjJ4cFpDQmliR0ZqYXpzS0lDQWdJR0p2Y21SbGNpMWpiMnhzWVhCelpUb2dZMjlzYkdGd2MyVTdDbjBLZEdnc0lIUmtJSHNLSUNBZ0lIQmhaR1JwYm1jNklEVndlRHNLSUNBZ0lIUmxlSFF0WVd4cFoyNDZJR3hsWm5RN0NuMEtkR0ZpYkdVamREQXhJSFJ5T201MGFDMWphR2xzWkNodlpHUXBJSHNLSUNBZ0lHSmhZMnRuY205MWJtUXRZMjlzYjNJNklDTmxaV1U3Q24wS2RHRmliR1VqZERBeElIUnlPbTUwYUMxamFHbHNaQ2hsZG1WdUtTQjdDaUFnSUdKaFkydG5jbTkxYm1RdFkyOXNiM0k2STJabVpqc0tmUW84TDNOMGVXeGxQZ284TDJobFlXUStDanhpYjJSNVBnb0tQSFJoWW14bElHbGtQU0owTURFaVBnb2dJRHgwY2o0S0lDQWdJRHgwWkQ0bUl6TXhORFE1T3lZak1qRTFNVGM3UEM5MFpENEtJQ0FnSUR4MFpENG1Jekl3TWpFNU95WWpNVGs1T1RJN1BDOTBaRDRLSUNBOEwzUnlQZ29nSUR4MGNqNEtJQ0FnSUR4MFpENG1Jekl4TXpBMk95WWpNekUwTkRrN0ppTXlNVFE1TlRzOEwzUmtQZ29nSUNBZ1BIUmtQalUwTmpFd1BDOTBaRDRLSUNBOEwzUnlQZ29nSUR4MGNqNEtJQ0FnSUR4MFpENG1Jek0xTWpZMk95WWpNamM1TnprN0ppTXlNak16TURzbUl6STFNekF3T3lZak1qZ3dNak03SmlNek9UWTBNRHNtSXpJME1qTXdPeVlqTmpVeU9EZzdKaU16TVRnMU9Uc21JelkxTWpnNU96d3ZkR1ErQ2lBZ0lDQThkR1ErT0M0eFBDOTBaRDRLSUNBOEwzUnlQZ284TDNSaFlteGxQZ284TDJKdlpIaytDand2YUhSdGJENEtJQ0FnSUNBZ0lDQUtJQ0FnSUNBZ0lDQT0iIHdpZHRoPSIzMTAiIGhlaWdodD0iMTMwIj48L2lmcmFtZT4nKVswXTsKICAgICAgICAgICAgICAgIHBvcHVwX2MzYzUwZWU5YTEwMjQyZDI5YmMzOTk1NGQxMzhkMjJlLnNldENvbnRlbnQoaV9mcmFtZV83YjhmMzliODU0MzQ0ZDgxOTdkNzEzNGNkMTllZmI1NSk7CiAgICAgICAgICAgIAoKICAgICAgICAgICAgbWFya2VyX2I0NTU4MDE0OTY1ODQwNjY5MjdjYTU2OTgwMGRiZjk4LmJpbmRQb3B1cChwb3B1cF9jM2M1MGVlOWExMDI0MmQyOWJjMzk5NTRkMTM4ZDIyZSk7CgogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzNmZjNiNmZhNzBmNTQxNjNhYjVjOTNiMjcwNWRhYjJmID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbMzguODUsMTE2LjQ1XSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXBfYjQxZDY2OWNjNWMzNDM5YjljYzFkZGY5M2ZkYmI2NzApOwogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgICAgIHZhciBwb3B1cF8xNTZjY2ZhMDdmNmU0MTkzOWU2NzA0ODJkMGNiMzliNSA9IEwucG9wdXAoe21heFdpZHRoOiAnNDAwJ30pOwoKICAgICAgICAgICAgCiAgICAgICAgICAgICAgICB2YXIgaV9mcmFtZV85YzJkZTA5YTQ0YmI0OTI3OTBhM2I1MDBlYmQyNDNiMiA9ICQoJzxpZnJhbWUgc3JjPSJkYXRhOnRleHQvaHRtbDtiYXNlNjQsQ2lBZ0lDQWdJQ0FnQ2lBZ0lDQWdJQ0FnSUNBZ0lBbzhJVVJQUTFSWlVFVWdhSFJ0YkQ0S1BHaDBiV3crQ2p4b1pXRmtQZ284YzNSNWJHVStDblJoWW14bElIc0tJQ0FnSUhkcFpIUm9PakV3TUNVN0NuMEtkR0ZpYkdVc0lIUm9MQ0IwWkNCN0NpQWdJQ0JpYjNKa1pYSTZJREZ3ZUNCemIyeHBaQ0JpYkdGamF6c0tJQ0FnSUdKdmNtUmxjaTFqYjJ4c1lYQnpaVG9nWTI5c2JHRndjMlU3Q24wS2RHZ3NJSFJrSUhzS0lDQWdJSEJoWkdScGJtYzZJRFZ3ZURzS0lDQWdJSFJsZUhRdFlXeHBaMjQ2SUd4bFpuUTdDbjBLZEdGaWJHVWpkREF4SUhSeU9tNTBhQzFqYUdsc1pDaHZaR1FwSUhzS0lDQWdJR0poWTJ0bmNtOTFibVF0WTI5c2IzSTZJQ05sWldVN0NuMEtkR0ZpYkdVamREQXhJSFJ5T201MGFDMWphR2xzWkNobGRtVnVLU0I3Q2lBZ0lHSmhZMnRuY205MWJtUXRZMjlzYjNJNkkyWm1aanNLZlFvOEwzTjBlV3hsUGdvOEwyaGxZV1ErQ2p4aWIyUjVQZ29LUEhSaFlteGxJR2xrUFNKME1ERWlQZ29nSUR4MGNqNEtJQ0FnSUR4MFpENG1Jek14TkRRNU95WWpNakUxTVRjN1BDOTBaRDRLSUNBZ0lEeDBaRDRtSXpJMU9Ua3hPeVlqTWpNME16TTdQQzkwWkQ0S0lDQThMM1J5UGdvZ0lEeDBjajRLSUNBZ0lEeDBaRDRtSXpJeE16QTJPeVlqTXpFME5EazdKaU15TVRRNU5UczhMM1JrUGdvZ0lDQWdQSFJrUGpVME5qRXlQQzkwWkQ0S0lDQThMM1J5UGdvZ0lEeDBjajRLSUNBZ0lEeDBaRDRtSXpNMU1qWTJPeVlqTWpjNU56azdKaU15TWpNek1Ec21JekkxTXpBd095WWpNamd3TWpNN0ppTXpPVFkwTURzbUl6STBNak13T3lZak5qVXlPRGc3SmlNek1UZzFPVHNtSXpZMU1qZzVPend2ZEdRK0NpQWdJQ0E4ZEdRK05DNHpQQzkwWkQ0S0lDQThMM1J5UGdvOEwzUmhZbXhsUGdvOEwySnZaSGsrQ2p3dmFIUnRiRDRLSUNBZ0lDQWdJQ0FLSUNBZ0lDQWdJQ0E9IiB3aWR0aD0iMzEwIiBoZWlnaHQ9IjEzMCI+PC9pZnJhbWU+JylbMF07CiAgICAgICAgICAgICAgICBwb3B1cF8xNTZjY2ZhMDdmNmU0MTkzOWU2NzA0ODJkMGNiMzliNS5zZXRDb250ZW50KGlfZnJhbWVfOWMyZGUwOWE0NGJiNDkyNzkwYTNiNTAwZWJkMjQzYjIpOwogICAgICAgICAgICAKCiAgICAgICAgICAgIG1hcmtlcl8zZmYzYjZmYTcwZjU0MTYzYWI1YzkzYjI3MDVkYWIyZi5iaW5kUG9wdXAocG9wdXBfMTU2Y2NmYTA3ZjZlNDE5MzllNjcwNDgyZDBjYjM5YjUpOwoKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl80NmEzOTAyMjRkZDI0NmRhOGM2Zjk1NTNkM2NhMDMzMiA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM5LjMyLDExNS45NV0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFwX2I0MWQ2NjljYzVjMzQzOWI5Y2MxZGRmOTNmZGJiNjcwKTsKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIAogICAgICAgICAgICB2YXIgcG9wdXBfYjk1NjAxN2IxNjJiNDJlY2IxMjZmODU0MzY1ZmYyNzkgPSBMLnBvcHVwKHttYXhXaWR0aDogJzQwMCd9KTsKCiAgICAgICAgICAgIAogICAgICAgICAgICAgICAgdmFyIGlfZnJhbWVfYTBkOWNiY2MzZjg4NDQ4ZmFjMjUzMzM4YzFjMGIxZmIgPSAkKCc8aWZyYW1lIHNyYz0iZGF0YTp0ZXh0L2h0bWw7YmFzZTY0LENpQWdJQ0FnSUNBZ0NpQWdJQ0FnSUNBZ0lDQWdJQW84SVVSUFExUlpVRVVnYUhSdGJENEtQR2gwYld3K0NqeG9aV0ZrUGdvOGMzUjViR1UrQ25SaFlteGxJSHNLSUNBZ0lIZHBaSFJvT2pFd01DVTdDbjBLZEdGaWJHVXNJSFJvTENCMFpDQjdDaUFnSUNCaWIzSmtaWEk2SURGd2VDQnpiMnhwWkNCaWJHRmphenNLSUNBZ0lHSnZjbVJsY2kxamIyeHNZWEJ6WlRvZ1kyOXNiR0Z3YzJVN0NuMEtkR2dzSUhSa0lIc0tJQ0FnSUhCaFpHUnBibWM2SURWd2VEc0tJQ0FnSUhSbGVIUXRZV3hwWjI0NklHeGxablE3Q24wS2RHRmliR1VqZERBeElIUnlPbTUwYUMxamFHbHNaQ2h2WkdRcElIc0tJQ0FnSUdKaFkydG5jbTkxYm1RdFkyOXNiM0k2SUNObFpXVTdDbjBLZEdGaWJHVWpkREF4SUhSeU9tNTBhQzFqYUdsc1pDaGxkbVZ1S1NCN0NpQWdJR0poWTJ0bmNtOTFibVF0WTI5c2IzSTZJMlptWmpzS2ZRbzhMM04wZVd4bFBnbzhMMmhsWVdRK0NqeGliMlI1UGdvS1BIUmhZbXhsSUdsa1BTSjBNREVpUGdvZ0lEeDBjajRLSUNBZ0lEeDBaRDRtSXpNeE5EUTVPeVlqTWpFMU1UYzdQQzkwWkQ0S0lDQWdJRHgwWkQ0bUl6TTVOalF3T3lZak16QTROalU3SmlNeU5ESXhOVHM4TDNSa1Bnb2dJRHd2ZEhJK0NpQWdQSFJ5UGdvZ0lDQWdQSFJrUGlZak1qRXpNRFk3SmlNek1UUTBPVHNtSXpJeE5EazFPend2ZEdRK0NpQWdJQ0E4ZEdRK05UUTFNRFk4TDNSa1Bnb2dJRHd2ZEhJK0NpQWdQSFJ5UGdvZ0lDQWdQSFJrUGlZak16VXlOalk3SmlNeU56azNPVHNtSXpJeU16TXdPeVlqTWpVek1EQTdKaU15T0RBeU16c21Jek01TmpRd095WWpNalF5TXpBN0ppTTJOVEk0T0RzbUl6TXhPRFU1T3lZak5qVXlPRGs3UEM5MFpENEtJQ0FnSUR4MFpENHlOQzQyUEM5MFpENEtJQ0E4TDNSeVBnbzhMM1JoWW14bFBnbzhMMkp2WkhrK0Nqd3ZhSFJ0YkQ0S0lDQWdJQ0FnSUNBS0lDQWdJQ0FnSUNBPSIgd2lkdGg9IjMxMCIgaGVpZ2h0PSIxMzAiPjwvaWZyYW1lPicpWzBdOwogICAgICAgICAgICAgICAgcG9wdXBfYjk1NjAxN2IxNjJiNDJlY2IxMjZmODU0MzY1ZmYyNzkuc2V0Q29udGVudChpX2ZyYW1lX2EwZDljYmNjM2Y4ODQ0OGZhYzI1MzMzOGMxYzBiMWZiKTsKICAgICAgICAgICAgCgogICAgICAgICAgICBtYXJrZXJfNDZhMzkwMjI0ZGQyNDZkYThjNmY5NTUzZDNjYTAzMzIuYmluZFBvcHVwKHBvcHVwX2I5NTYwMTdiMTYyYjQyZWNiMTI2Zjg1NDM2NWZmMjc5KTsKCiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfMmQxY2MxMmRlNjI0NDU4MmJlMzFjMjljMTc2ZDEyZGEgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFszOC45OCwxMTUuNjVdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcF9iNDFkNjY5Y2M1YzM0MzliOWNjMWRkZjkzZmRiYjY3MCk7CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgdmFyIHBvcHVwXzBkODFhOGYzMWUwZDQzMzU5Y2JlODIwZmZkN2U2OTkzID0gTC5wb3B1cCh7bWF4V2lkdGg6ICc0MDAnfSk7CgogICAgICAgICAgICAKICAgICAgICAgICAgICAgIHZhciBpX2ZyYW1lXzM0MTZhNDEyNzJkOTRkNmQ5Yzg4N2E0N2Q0MGUwNTFlID0gJCgnPGlmcmFtZSBzcmM9ImRhdGE6dGV4dC9odG1sO2Jhc2U2NCxDaUFnSUNBZ0lDQWdDaUFnSUNBZ0lDQWdJQ0FnSUFvOElVUlBRMVJaVUVVZ2FIUnRiRDRLUEdoMGJXdytDanhvWldGa1BnbzhjM1I1YkdVK0NuUmhZbXhsSUhzS0lDQWdJSGRwWkhSb09qRXdNQ1U3Q24wS2RHRmliR1VzSUhSb0xDQjBaQ0I3Q2lBZ0lDQmliM0prWlhJNklERndlQ0J6YjJ4cFpDQmliR0ZqYXpzS0lDQWdJR0p2Y21SbGNpMWpiMnhzWVhCelpUb2dZMjlzYkdGd2MyVTdDbjBLZEdnc0lIUmtJSHNLSUNBZ0lIQmhaR1JwYm1jNklEVndlRHNLSUNBZ0lIUmxlSFF0WVd4cFoyNDZJR3hsWm5RN0NuMEtkR0ZpYkdVamREQXhJSFJ5T201MGFDMWphR2xzWkNodlpHUXBJSHNLSUNBZ0lHSmhZMnRuY205MWJtUXRZMjlzYjNJNklDTmxaV1U3Q24wS2RHRmliR1VqZERBeElIUnlPbTUwYUMxamFHbHNaQ2hsZG1WdUtTQjdDaUFnSUdKaFkydG5jbTkxYm1RdFkyOXNiM0k2STJabVpqc0tmUW84TDNOMGVXeGxQZ284TDJobFlXUStDanhpYjJSNVBnb0tQSFJoWW14bElHbGtQU0owTURFaVBnb2dJRHgwY2o0S0lDQWdJRHgwWkQ0bUl6TXhORFE1T3lZak1qRTFNVGM3UEM5MFpENEtJQ0FnSUR4MFpENG1JekkwTkRZME95WWpNamMzTURBN1BDOTBaRDRLSUNBOEwzUnlQZ29nSUR4MGNqNEtJQ0FnSUR4MFpENG1Jekl4TXpBMk95WWpNekUwTkRrN0ppTXlNVFE1TlRzOEwzUmtQZ29nSUNBZ1BIUmtQalUwTmpBeFBDOTBaRDRLSUNBOEwzUnlQZ29nSUR4MGNqNEtJQ0FnSUR4MFpENG1Jek0xTWpZMk95WWpNamM1TnprN0ppTXlNak16TURzbUl6STFNekF3T3lZak1qZ3dNak03SmlNek9UWTBNRHNtSXpJME1qTXdPeVlqTmpVeU9EZzdKaU16TVRnMU9Uc21JelkxTWpnNU96d3ZkR1ErQ2lBZ0lDQThkR1ErTVRNdU1Ud3ZkR1ErQ2lBZ1BDOTBjajRLUEM5MFlXSnNaVDRLUEM5aWIyUjVQZ284TDJoMGJXdytDaUFnSUNBZ0lDQWdDaUFnSUNBZ0lDQWciIHdpZHRoPSIzMTAiIGhlaWdodD0iMTMwIj48L2lmcmFtZT4nKVswXTsKICAgICAgICAgICAgICAgIHBvcHVwXzBkODFhOGYzMWUwZDQzMzU5Y2JlODIwZmZkN2U2OTkzLnNldENvbnRlbnQoaV9mcmFtZV8zNDE2YTQxMjcyZDk0ZDZkOWM4ODdhNDdkNDBlMDUxZSk7CiAgICAgICAgICAgIAoKICAgICAgICAgICAgbWFya2VyXzJkMWNjMTJkZTYyNDQ1ODJiZTMxYzI5YzE3NmQxMmRhLmJpbmRQb3B1cChwb3B1cF8wZDgxYThmMzFlMGQ0MzM1OWNiZTgyMGZmZDdlNjk5Myk7CgogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzFhMGEzNTUyYzc2OTRiMGFhOWE2NjM4YzA5MWE1NDU2ID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbMzguNzIsMTE1Ljc3XSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXBfYjQxZDY2OWNjNWMzNDM5YjljYzFkZGY5M2ZkYmI2NzApOwogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgICAgIHZhciBwb3B1cF80Yzg1OWI4ZjY4ZjI0NTQxOGU0ZWFiNmE3Mjg2NTliMyA9IEwucG9wdXAoe21heFdpZHRoOiAnNDAwJ30pOwoKICAgICAgICAgICAgCiAgICAgICAgICAgICAgICB2YXIgaV9mcmFtZV84YzRmYjNiODdhYTQ0MzlkOWM3NjdjMTY1NDA0ODM3YSA9ICQoJzxpZnJhbWUgc3JjPSJkYXRhOnRleHQvaHRtbDtiYXNlNjQsQ2lBZ0lDQWdJQ0FnQ2lBZ0lDQWdJQ0FnSUNBZ0lBbzhJVVJQUTFSWlVFVWdhSFJ0YkQ0S1BHaDBiV3crQ2p4b1pXRmtQZ284YzNSNWJHVStDblJoWW14bElIc0tJQ0FnSUhkcFpIUm9PakV3TUNVN0NuMEtkR0ZpYkdVc0lIUm9MQ0IwWkNCN0NpQWdJQ0JpYjNKa1pYSTZJREZ3ZUNCemIyeHBaQ0JpYkdGamF6c0tJQ0FnSUdKdmNtUmxjaTFqYjJ4c1lYQnpaVG9nWTI5c2JHRndjMlU3Q24wS2RHZ3NJSFJrSUhzS0lDQWdJSEJoWkdScGJtYzZJRFZ3ZURzS0lDQWdJSFJsZUhRdFlXeHBaMjQ2SUd4bFpuUTdDbjBLZEdGaWJHVWpkREF4SUhSeU9tNTBhQzFqYUdsc1pDaHZaR1FwSUhzS0lDQWdJR0poWTJ0bmNtOTFibVF0WTI5c2IzSTZJQ05sWldVN0NuMEtkR0ZpYkdVamREQXhJSFJ5T201MGFDMWphR2xzWkNobGRtVnVLU0I3Q2lBZ0lHSmhZMnRuY205MWJtUXRZMjlzYjNJNkkyWm1aanNLZlFvOEwzTjBlV3hsUGdvOEwyaGxZV1ErQ2p4aWIyUjVQZ29LUEhSaFlteGxJR2xrUFNKME1ERWlQZ29nSUR4MGNqNEtJQ0FnSUR4MFpENG1Jek14TkRRNU95WWpNakUxTVRjN1BDOTBaRDRLSUNBZ0lEeDBaRDRtSXpNNU5qUXdPeVlqTXpnME5URTdQQzkwWkQ0S0lDQThMM1J5UGdvZ0lEeDBjajRLSUNBZ0lEeDBaRDRtSXpJeE16QTJPeVlqTXpFME5EazdKaU15TVRRNU5UczhMM1JrUGdvZ0lDQWdQSFJrUGpVME5qQXpQQzkwWkQ0S0lDQThMM1J5UGdvZ0lEeDBjajRLSUNBZ0lEeDBaRDRtSXpNMU1qWTJPeVlqTWpjNU56azdKaU15TWpNek1Ec21JekkxTXpBd095WWpNamd3TWpNN0ppTXpPVFkwTURzbUl6STBNak13T3lZak5qVXlPRGc3SmlNek1UZzFPVHNtSXpZMU1qZzVPend2ZEdRK0NpQWdJQ0E4ZEdRK01UQXVNRHd2ZEdRK0NpQWdQQzkwY2o0S1BDOTBZV0pzWlQ0S1BDOWliMlI1UGdvOEwyaDBiV3crQ2lBZ0lDQWdJQ0FnQ2lBZ0lDQWdJQ0FnIiB3aWR0aD0iMzEwIiBoZWlnaHQ9IjEzMCI+PC9pZnJhbWU+JylbMF07CiAgICAgICAgICAgICAgICBwb3B1cF80Yzg1OWI4ZjY4ZjI0NTQxOGU0ZWFiNmE3Mjg2NTliMy5zZXRDb250ZW50KGlfZnJhbWVfOGM0ZmIzYjg3YWE0NDM5ZDljNzY3YzE2NTQwNDgzN2EpOwogICAgICAgICAgICAKCiAgICAgICAgICAgIG1hcmtlcl8xYTBhMzU1MmM3Njk0YjBhYTlhNjYzOGMwOTFhNTQ1Ni5iaW5kUG9wdXAocG9wdXBfNGM4NTliOGY2OGYyNDU0MThlNGVhYjZhNzI4NjU5YjMpOwoKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl84NzhmNTJkNmFlZDY0MTc2YjIxYWJkOTMyN2M1ZWEzMiA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM5LjMsMTE2LjQ4XSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXBfYjQxZDY2OWNjNWMzNDM5YjljYzFkZGY5M2ZkYmI2NzApOwogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgICAgIHZhciBwb3B1cF85ZDI3OGQ4NjY3Mjg0NDRmYjBhOGE5N2ViODUxN2MxMSA9IEwucG9wdXAoe21heFdpZHRoOiAnNDAwJ30pOwoKICAgICAgICAgICAgCiAgICAgICAgICAgICAgICB2YXIgaV9mcmFtZV9jYzVlNmUyOGY2Nzc0YWFiYTVmZjAxYjZkMzMwNDhlNyA9ICQoJzxpZnJhbWUgc3JjPSJkYXRhOnRleHQvaHRtbDtiYXNlNjQsQ2lBZ0lDQWdJQ0FnQ2lBZ0lDQWdJQ0FnSUNBZ0lBbzhJVVJQUTFSWlVFVWdhSFJ0YkQ0S1BHaDBiV3crQ2p4b1pXRmtQZ284YzNSNWJHVStDblJoWW14bElIc0tJQ0FnSUhkcFpIUm9PakV3TUNVN0NuMEtkR0ZpYkdVc0lIUm9MQ0IwWkNCN0NpQWdJQ0JpYjNKa1pYSTZJREZ3ZUNCemIyeHBaQ0JpYkdGamF6c0tJQ0FnSUdKdmNtUmxjaTFqYjJ4c1lYQnpaVG9nWTI5c2JHRndjMlU3Q24wS2RHZ3NJSFJrSUhzS0lDQWdJSEJoWkdScGJtYzZJRFZ3ZURzS0lDQWdJSFJsZUhRdFlXeHBaMjQ2SUd4bFpuUTdDbjBLZEdGaWJHVWpkREF4SUhSeU9tNTBhQzFqYUdsc1pDaHZaR1FwSUhzS0lDQWdJR0poWTJ0bmNtOTFibVF0WTI5c2IzSTZJQ05sWldVN0NuMEtkR0ZpYkdVamREQXhJSFJ5T201MGFDMWphR2xzWkNobGRtVnVLU0I3Q2lBZ0lHSmhZMnRuY205MWJtUXRZMjlzYjNJNkkyWm1aanNLZlFvOEwzTjBlV3hsUGdvOEwyaGxZV1ErQ2p4aWIyUjVQZ29LUEhSaFlteGxJR2xrUFNKME1ERWlQZ29nSUR4MGNqNEtJQ0FnSUR4MFpENG1Jek14TkRRNU95WWpNakUxTVRjN1BDOTBaRDRLSUNBZ0lEeDBaRDRtSXpJM056QTBPeVlqTWpneE5qVTdQQzkwWkQ0S0lDQThMM1J5UGdvZ0lEeDBjajRLSUNBZ0lEeDBaRDRtSXpJeE16QTJPeVlqTXpFME5EazdKaU15TVRRNU5UczhMM1JrUGdvZ0lDQWdQSFJrUGpVME5URTVQQzkwWkQ0S0lDQThMM1J5UGdvZ0lEeDBjajRLSUNBZ0lEeDBaRDRtSXpNMU1qWTJPeVlqTWpjNU56azdKaU15TWpNek1Ec21JekkxTXpBd095WWpNamd3TWpNN0ppTXpPVFkwTURzbUl6STBNak13T3lZak5qVXlPRGc3SmlNek1UZzFPVHNtSXpZMU1qZzVPend2ZEdRK0NpQWdJQ0E4ZEdRK01USXVNand2ZEdRK0NpQWdQQzkwY2o0S1BDOTBZV0pzWlQ0S1BDOWliMlI1UGdvOEwyaDBiV3crQ2lBZ0lDQWdJQ0FnQ2lBZ0lDQWdJQ0FnIiB3aWR0aD0iMzEwIiBoZWlnaHQ9IjEzMCI+PC9pZnJhbWU+JylbMF07CiAgICAgICAgICAgICAgICBwb3B1cF85ZDI3OGQ4NjY3Mjg0NDRmYjBhOGE5N2ViODUxN2MxMS5zZXRDb250ZW50KGlfZnJhbWVfY2M1ZTZlMjhmNjc3NGFhYmE1ZmYwMWI2ZDMzMDQ4ZTcpOwogICAgICAgICAgICAKCiAgICAgICAgICAgIG1hcmtlcl84NzhmNTJkNmFlZDY0MTc2YjIxYWJkOTMyN2M1ZWEzMi5iaW5kUG9wdXAocG9wdXBfOWQyNzhkODY2NzI4NDQ0ZmIwYThhOTdlYjg1MTdjMTEpOwoKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl81MmY2MjU3NTg4YzI0YmM3ODRlMTQ3NzQ1NjUzOGI2NCA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM5LjQyLDExNi4yOF0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFwX2I0MWQ2NjljYzVjMzQzOWI5Y2MxZGRmOTNmZGJiNjcwKTsKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIAogICAgICAgICAgICB2YXIgcG9wdXBfYzZjMzYxMzE5ZWFjNGIxN2FlOWQ4ZWY1Y2Q3MWRmNTcgPSBMLnBvcHVwKHttYXhXaWR0aDogJzQwMCd9KTsKCiAgICAgICAgICAgIAogICAgICAgICAgICAgICAgdmFyIGlfZnJhbWVfZTNkMzM5ZTM1ZGU0NDNkYTgxODU3NGY2ZWFhYWY4NzQgPSAkKCc8aWZyYW1lIHNyYz0iZGF0YTp0ZXh0L2h0bWw7YmFzZTY0LENpQWdJQ0FnSUNBZ0NpQWdJQ0FnSUNBZ0lDQWdJQW84SVVSUFExUlpVRVVnYUhSdGJENEtQR2gwYld3K0NqeG9aV0ZrUGdvOGMzUjViR1UrQ25SaFlteGxJSHNLSUNBZ0lIZHBaSFJvT2pFd01DVTdDbjBLZEdGaWJHVXNJSFJvTENCMFpDQjdDaUFnSUNCaWIzSmtaWEk2SURGd2VDQnpiMnhwWkNCaWJHRmphenNLSUNBZ0lHSnZjbVJsY2kxamIyeHNZWEJ6WlRvZ1kyOXNiR0Z3YzJVN0NuMEtkR2dzSUhSa0lIc0tJQ0FnSUhCaFpHUnBibWM2SURWd2VEc0tJQ0FnSUhSbGVIUXRZV3hwWjI0NklHeGxablE3Q24wS2RHRmliR1VqZERBeElIUnlPbTUwYUMxamFHbHNaQ2h2WkdRcElIc0tJQ0FnSUdKaFkydG5jbTkxYm1RdFkyOXNiM0k2SUNObFpXVTdDbjBLZEdGaWJHVWpkREF4SUhSeU9tNTBhQzFqYUdsc1pDaGxkbVZ1S1NCN0NpQWdJR0poWTJ0bmNtOTFibVF0WTI5c2IzSTZJMlptWmpzS2ZRbzhMM04wZVd4bFBnbzhMMmhsWVdRK0NqeGliMlI1UGdvS1BIUmhZbXhsSUdsa1BTSjBNREVpUGdvZ0lEeDBjajRLSUNBZ0lEeDBaRDRtSXpNeE5EUTVPeVlqTWpFMU1UYzdQQzkwWkQ0S0lDQWdJRHgwWkQ0bUl6SXlNalkyT3lZak1qTTBNek03UEM5MFpENEtJQ0E4TDNSeVBnb2dJRHgwY2o0S0lDQWdJRHgwWkQ0bUl6SXhNekEyT3lZak16RTBORGs3SmlNeU1UUTVOVHM4TDNSa1Bnb2dJQ0FnUEhSa1BqVTBOVEV5UEM5MFpENEtJQ0E4TDNSeVBnb2dJRHgwY2o0S0lDQWdJRHgwWkQ0bUl6TTFNalkyT3lZak1qYzVOems3SmlNeU1qTXpNRHNtSXpJMU16QXdPeVlqTWpnd01qTTdKaU16T1RZME1Ec21JekkwTWpNd095WWpOalV5T0RnN0ppTXpNVGcxT1RzbUl6WTFNamc1T3p3dmRHUStDaUFnSUNBOGRHUStNakV1TkR3dmRHUStDaUFnUEM5MGNqNEtQQzkwWVdKc1pUNEtQQzlpYjJSNVBnbzhMMmgwYld3K0NpQWdJQ0FnSUNBZ0NpQWdJQ0FnSUNBZyIgd2lkdGg9IjMxMCIgaGVpZ2h0PSIxMzAiPjwvaWZyYW1lPicpWzBdOwogICAgICAgICAgICAgICAgcG9wdXBfYzZjMzYxMzE5ZWFjNGIxN2FlOWQ4ZWY1Y2Q3MWRmNTcuc2V0Q29udGVudChpX2ZyYW1lX2UzZDMzOWUzNWRlNDQzZGE4MTg1NzRmNmVhYWFmODc0KTsKICAgICAgICAgICAgCgogICAgICAgICAgICBtYXJrZXJfNTJmNjI1NzU4OGMyNGJjNzg0ZTE0Nzc0NTY1MzhiNjQuYmluZFBvcHVwKHBvcHVwX2M2YzM2MTMxOWVhYzRiMTdhZTlkOGVmNWNkNzFkZjU3KTsKCiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgIDwvc2NyaXB0PgogICAgICAgIA==" style="position:absolute;width:100%;height:100%;left:0;top:0;"></iframe></div></div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+    </div>
+  </div>
+
+    </div>
+    <aside class="postpromonav"><nav><ul class="pager hidden-print">
+<li class="previous">
+                <a href="../ge-chong-ge-shi-di-li-xin-xi-shu-ju-du-qu-he-xian-shi/" rel="prev" title="各种格式地理信息数据读取和显示">前一篇</a>
+            </li>
+        </ul></nav></aside><section class="comments hidden-print"><h2>注释</h2>
+        
+        
+<script src="https://apis.google.com/js/plusone.js"></script><div class="g-comments" data-href="https://yafei777.github.io/Yafei-blog/blog/folium-popup/" data-first_party_property="BLOGGER" data-view_type="FILTERED_POSTMOD">
+</div>
+
+
+        </section><script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"> </script><script type="text/x-mathjax-config">
+            MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
+            </script></article>
+</div>
+        <!--End of body content-->
+
+        <footer id="footer">
+            Contents © 2017         <a href="mailto:yafei.li@mail.bnu.edu.cn">Yafei Li</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         
+            
+        </footer>
+</div>
+</div>
+
+
+            <script src="../../assets/js/all-nocdn.js"></script><script src="../../assets/js/colorbox-i18n/jquery.colorbox-zh-CN.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+    moment.locale("zh-cn");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates -->
+</body>
+</html>

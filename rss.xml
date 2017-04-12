@@ -1,5 +1,1258 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0"><channel><title>Yafei's Blog</title><link>https://yafei777.github.io/Yafei-blog/</link><description>This is a personal site of Yafei for sharing fun techniques and beautiful pics.</description><atom:link href="https://yafei777.github.io/Yafei-blog/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>zh_cn</language><lastBuildDate>Wed, 05 Apr 2017 11:22:29 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>各种格式地理信息数据读取和显示</title><link>https://yafei777.github.io/Yafei-blog/blog/ge-chong-ge-shi-di-li-xin-xi-shu-ju-du-qu-he-xian-shi/</link><dc:creator>Yafei Li</dc:creator><description>&lt;div tabindex="-1" id="notebook" class="border-box-sizing"&gt;
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Yafei's Blog</title><link>https://yafei777.github.io/Yafei-blog/</link><description>This is a personal site of Yafei for sharing fun techniques and beautiful pics.</description><atom:link href="https://yafei777.github.io/Yafei-blog/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>zh_cn</language><lastBuildDate>Wed, 12 Apr 2017 08:30:23 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Folium Popup</title><link>https://yafei777.github.io/Yafei-blog/blog/folium-popup/</link><dc:creator>Yafei Li</dc:creator><description>&lt;div tabindex="-1" id="notebook" class="border-box-sizing"&gt;
+    &lt;div class="container" id="notebook-container"&gt;
+
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;h2 id="Folium交互式地图及popup中文显示"&gt;Folium交互式地图及popup中文显示&lt;a class="anchor-link" href="https://yafei777.github.io/Yafei-blog/blog/folium-popup/#Folium%E4%BA%A4%E4%BA%92%E5%BC%8F%E5%9C%B0%E5%9B%BE%E5%8F%8Apopup%E4%B8%AD%E6%96%87%E6%98%BE%E7%A4%BA"&gt;¶&lt;/a&gt;&lt;/h2&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;本文将介绍使用Folium生成交互式地图并使popup弹框支持&lt;strong&gt;中文显示&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;Folium是一个python包，可以用Python代码非常方便的生成嵌入网页的基于&lt;a href="http://leafletjs.com/examples/quick-start/"&gt;Leaflet&lt;/a&gt;的交互式地图，介绍可见&lt;a href="http://folium.readthedocs.io/"&gt;主页&lt;/a&gt;。最简单的安装方法还是通过pip。&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;Folium的说明文档不太完整，但是几个例子还是能把功能说明白的，主页中就有。当然，如果出现莫名其妙的bug，就得考验大家的智慧了。在我个人的使用过程中就遇到了一个困扰很久的bug，popup弹框不能显示中文。受python4oceanographers的一篇&lt;a href="https://ocefpaf.github.io/python4oceanographers/blog/2015/12/14/geopandas_folium/"&gt;博文&lt;/a&gt;的启发，终于解决，在此特别感谢，并分享给中文世界的朋友们！&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;本文将通过一个应用场景尝试解决以下问题：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;找到距离某地最近的若干记录（并用公里显示距离）&lt;/li&gt;
+&lt;li&gt;显示在Folium地图上（配置合适的标志）&lt;/li&gt;
+&lt;li&gt;点击显示详细信息（中文！）&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;h4 id="数据预处理"&gt;数据预处理&lt;a class="anchor-link" href="https://yafei777.github.io/Yafei-blog/blog/folium-popup/#%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86"&gt;¶&lt;/a&gt;&lt;/h4&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;首先还是下载中国气象站点数据，读入pandas并转换成十进制度，上一篇博文有介绍，不再赘述。&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [1]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [2]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;read_excel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'SURF_CHN_MUL_HOR_STATION.xlsx'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [3]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;min2deg&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;int&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mf"&gt;1.66666667&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;
+
+&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'经度'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'经度'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;min2deg&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'纬度'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'纬度'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;min2deg&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;整理一下数据精确的有效数字&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [4]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'观测场拔海高度（米）'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'观测场拔海高度（米）'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;lambda&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="nb"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+
+&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'纬度'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'纬度'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;lambda&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="nb"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'经度'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'经度'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;lambda&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="nb"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [5]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[5]:&lt;/div&gt;
+
+&lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;省份&lt;/th&gt;
+      &lt;th&gt;区站号&lt;/th&gt;
+      &lt;th&gt;站名&lt;/th&gt;
+      &lt;th&gt;纬度&lt;/th&gt;
+      &lt;th&gt;经度&lt;/th&gt;
+      &lt;th&gt;气压传感器拔海高度（米）&lt;/th&gt;
+      &lt;th&gt;观测场拔海高度（米）&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;安徽&lt;/td&gt;
+      &lt;td&gt;58015&lt;/td&gt;
+      &lt;td&gt;砀山&lt;/td&gt;
+      &lt;td&gt;34.45&lt;/td&gt;
+      &lt;td&gt;116.33&lt;/td&gt;
+      &lt;td&gt;45.4&lt;/td&gt;
+      &lt;td&gt;44.2&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;安徽&lt;/td&gt;
+      &lt;td&gt;58016&lt;/td&gt;
+      &lt;td&gt;萧县&lt;/td&gt;
+      &lt;td&gt;34.18&lt;/td&gt;
+      &lt;td&gt;116.97&lt;/td&gt;
+      &lt;td&gt;35.9&lt;/td&gt;
+      &lt;td&gt;34.7&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;安徽&lt;/td&gt;
+      &lt;td&gt;58102&lt;/td&gt;
+      &lt;td&gt;亳州&lt;/td&gt;
+      &lt;td&gt;33.87&lt;/td&gt;
+      &lt;td&gt;115.77&lt;/td&gt;
+      &lt;td&gt;39.2&lt;/td&gt;
+      &lt;td&gt;37.7&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;安徽&lt;/td&gt;
+      &lt;td&gt;58107&lt;/td&gt;
+      &lt;td&gt;临泉&lt;/td&gt;
+      &lt;td&gt;33.02&lt;/td&gt;
+      &lt;td&gt;115.28&lt;/td&gt;
+      &lt;td&gt;37.0&lt;/td&gt;
+      &lt;td&gt;35.8&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;安徽&lt;/td&gt;
+      &lt;td&gt;58108&lt;/td&gt;
+      &lt;td&gt;界首&lt;/td&gt;
+      &lt;td&gt;33.23&lt;/td&gt;
+      &lt;td&gt;115.33&lt;/td&gt;
+      &lt;td&gt;35.0&lt;/td&gt;
+      &lt;td&gt;34.0&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;将这个版本的数据存起来，以便下次使用&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;data.to_csv('中国气象站点信息_decimal.csv')
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;h4 id="计算两点距离（公里表示）"&gt;计算两点距离（公里表示）&lt;a class="anchor-link" href="https://yafei777.github.io/Yafei-blog/blog/folium-popup/#%E8%AE%A1%E7%AE%97%E4%B8%A4%E7%82%B9%E8%B7%9D%E7%A6%BB%EF%BC%88%E5%85%AC%E9%87%8C%E8%A1%A8%E7%A4%BA%EF%BC%89"&gt;¶&lt;/a&gt;&lt;/h4&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;已知两点经纬度计算两点距离有其公式，详见&lt;a href="http://www.movable-type.co.uk/scripts/latlong.html"&gt;Movable-Type的介绍&lt;/a&gt;（包括JS代码和网页计算器）。以下Python代码来自&lt;a href="https://gist.github.com/rochacbruno"&gt;Bruno Rocha&lt;/a&gt;的分享在此感谢！&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [6]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# Haversine formula example in Python&lt;/span&gt;
+&lt;span class="c1"&gt;# Author: Wayne Dyck&lt;/span&gt;
+
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;math&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;distance&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;origin&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;destination&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;lat1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;lon1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;origin&lt;/span&gt;
+    &lt;span class="n"&gt;lat2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;lon2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;destination&lt;/span&gt;
+    &lt;span class="n"&gt;radius&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;6371&lt;/span&gt; &lt;span class="c1"&gt;# km&lt;/span&gt;
+
+    &lt;span class="n"&gt;dlat&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;math&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;radians&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;lat2&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;lat1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;dlon&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;math&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;radians&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;lon2&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;lon1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;math&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sin&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dlat&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;math&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sin&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dlat&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;math&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cos&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;math&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;radians&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;lat1&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; \
+        &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;math&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cos&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;math&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;radians&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;lat2&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;math&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sin&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dlon&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;math&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sin&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dlon&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;math&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;atan2&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;math&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sqrt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;math&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sqrt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="n"&gt;d&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;radius&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;d&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;赤道上1度约111公里，北纬30度附近1度越96公里：&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [7]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;distance&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;),(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[7]:&lt;/div&gt;
+
+
+&lt;div class="output_text output_subarea output_execute_result"&gt;
+&lt;pre&gt;111.19492664455873&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [8]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;distance&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="mi"&gt;30&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;),(&lt;/span&gt;&lt;span class="mi"&gt;30&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[8]:&lt;/div&gt;
+
+
+&lt;div class="output_text output_subarea output_execute_result"&gt;
+&lt;pre&gt;96.29732567761188&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;用Harversine函数计算所有记录的距离：&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [9]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'距离雄县(km)'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;lambda&lt;/span&gt; &lt;span class="n"&gt;r&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;distance&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;r&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'纬度'&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;&lt;span class="n"&gt;r&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'经度'&lt;/span&gt;&lt;span class="p"&gt;]),(&lt;/span&gt;&lt;span class="mf"&gt;39.02&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mf"&gt;116.10&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;&lt;span class="n"&gt;axis&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;选择距离雄县50km以内的记录&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [10]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'距离雄县(km)'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="mi"&gt;50&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sort_values&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'距离雄县(km)'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[10]:&lt;/div&gt;
+
+&lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;省份&lt;/th&gt;
+      &lt;th&gt;区站号&lt;/th&gt;
+      &lt;th&gt;站名&lt;/th&gt;
+      &lt;th&gt;纬度&lt;/th&gt;
+      &lt;th&gt;经度&lt;/th&gt;
+      &lt;th&gt;气压传感器拔海高度（米）&lt;/th&gt;
+      &lt;th&gt;观测场拔海高度（米）&lt;/th&gt;
+      &lt;th&gt;距离雄县(km)&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;592&lt;/th&gt;
+      &lt;td&gt;河北&lt;/td&gt;
+      &lt;td&gt;54636&lt;/td&gt;
+      &lt;td&gt;雄县&lt;/td&gt;
+      &lt;td&gt;39.02&lt;/td&gt;
+      &lt;td&gt;116.10&lt;/td&gt;
+      &lt;td&gt;12.2&lt;/td&gt;
+      &lt;td&gt;11.1&lt;/td&gt;
+      &lt;td&gt;0.000000&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;569&lt;/th&gt;
+      &lt;td&gt;河北&lt;/td&gt;
+      &lt;td&gt;54605&lt;/td&gt;
+      &lt;td&gt;安新&lt;/td&gt;
+      &lt;td&gt;38.93&lt;/td&gt;
+      &lt;td&gt;115.93&lt;/td&gt;
+      &lt;td&gt;5.6&lt;/td&gt;
+      &lt;td&gt;4.4&lt;/td&gt;
+      &lt;td&gt;17.779593&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;546&lt;/th&gt;
+      &lt;td&gt;河北&lt;/td&gt;
+      &lt;td&gt;54503&lt;/td&gt;
+      &lt;td&gt;容城&lt;/td&gt;
+      &lt;td&gt;39.07&lt;/td&gt;
+      &lt;td&gt;115.82&lt;/td&gt;
+      &lt;td&gt;14.0&lt;/td&gt;
+      &lt;td&gt;12.8&lt;/td&gt;
+      &lt;td&gt;24.811635&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;552&lt;/th&gt;
+      &lt;td&gt;河北&lt;/td&gt;
+      &lt;td&gt;54518&lt;/td&gt;
+      &lt;td&gt;霸州&lt;/td&gt;
+      &lt;td&gt;39.17&lt;/td&gt;
+      &lt;td&gt;116.40&lt;/td&gt;
+      &lt;td&gt;10.4&lt;/td&gt;
+      &lt;td&gt;8.9&lt;/td&gt;
+      &lt;td&gt;30.797155&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;574&lt;/th&gt;
+      &lt;td&gt;河北&lt;/td&gt;
+      &lt;td&gt;54610&lt;/td&gt;
+      &lt;td&gt;任丘&lt;/td&gt;
+      &lt;td&gt;38.73&lt;/td&gt;
+      &lt;td&gt;116.10&lt;/td&gt;
+      &lt;td&gt;9.2&lt;/td&gt;
+      &lt;td&gt;8.1&lt;/td&gt;
+      &lt;td&gt;32.246529&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;576&lt;/th&gt;
+      &lt;td&gt;河北&lt;/td&gt;
+      &lt;td&gt;54612&lt;/td&gt;
+      &lt;td&gt;文安&lt;/td&gt;
+      &lt;td&gt;38.85&lt;/td&gt;
+      &lt;td&gt;116.45&lt;/td&gt;
+      &lt;td&gt;5.4&lt;/td&gt;
+      &lt;td&gt;4.3&lt;/td&gt;
+      &lt;td&gt;35.689976&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;547&lt;/th&gt;
+      &lt;td&gt;河北&lt;/td&gt;
+      &lt;td&gt;54506&lt;/td&gt;
+      &lt;td&gt;高碑店&lt;/td&gt;
+      &lt;td&gt;39.32&lt;/td&gt;
+      &lt;td&gt;115.95&lt;/td&gt;
+      &lt;td&gt;25.7&lt;/td&gt;
+      &lt;td&gt;24.6&lt;/td&gt;
+      &lt;td&gt;35.777055&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;565&lt;/th&gt;
+      &lt;td&gt;河北&lt;/td&gt;
+      &lt;td&gt;54601&lt;/td&gt;
+      &lt;td&gt;徐水&lt;/td&gt;
+      &lt;td&gt;38.98&lt;/td&gt;
+      &lt;td&gt;115.65&lt;/td&gt;
+      &lt;td&gt;14.3&lt;/td&gt;
+      &lt;td&gt;13.1&lt;/td&gt;
+      &lt;td&gt;39.140108&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;567&lt;/th&gt;
+      &lt;td&gt;河北&lt;/td&gt;
+      &lt;td&gt;54603&lt;/td&gt;
+      &lt;td&gt;高阳&lt;/td&gt;
+      &lt;td&gt;38.72&lt;/td&gt;
+      &lt;td&gt;115.77&lt;/td&gt;
+      &lt;td&gt;11.2&lt;/td&gt;
+      &lt;td&gt;10.0&lt;/td&gt;
+      &lt;td&gt;43.920144&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;553&lt;/th&gt;
+      &lt;td&gt;河北&lt;/td&gt;
+      &lt;td&gt;54519&lt;/td&gt;
+      &lt;td&gt;永清&lt;/td&gt;
+      &lt;td&gt;39.30&lt;/td&gt;
+      &lt;td&gt;116.48&lt;/td&gt;
+      &lt;td&gt;13.4&lt;/td&gt;
+      &lt;td&gt;12.2&lt;/td&gt;
+      &lt;td&gt;45.197136&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;550&lt;/th&gt;
+      &lt;td&gt;河北&lt;/td&gt;
+      &lt;td&gt;54512&lt;/td&gt;
+      &lt;td&gt;固安&lt;/td&gt;
+      &lt;td&gt;39.42&lt;/td&gt;
+      &lt;td&gt;116.28&lt;/td&gt;
+      &lt;td&gt;22.6&lt;/td&gt;
+      &lt;td&gt;21.4&lt;/td&gt;
+      &lt;td&gt;47.103376&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;剔除雄县本身后即为要找的50km内的记录：&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [11]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;selected_st&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'距离雄县(km)'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="mi"&gt;50&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sort_values&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'距离雄县(km)'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;iloc&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;:,:]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;h4 id="Folium地图显示"&gt;Folium地图显示&lt;a class="anchor-link" href="https://yafei777.github.io/Yafei-blog/blog/folium-popup/#Folium%E5%9C%B0%E5%9B%BE%E6%98%BE%E7%A4%BA"&gt;¶&lt;/a&gt;&lt;/h4&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;Folium设置初始地图很简单，只需指定一个中心坐标。找到雄县的坐标：&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [12]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;folium&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [13]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ix&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'站名'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="s1"&gt;'雄县'&lt;/span&gt;&lt;span class="p"&gt;,[&lt;/span&gt;&lt;span class="s1"&gt;'站名'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;'纬度'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;'经度'&lt;/span&gt;&lt;span class="p"&gt;]]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[13]:&lt;/div&gt;
+
+&lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;站名&lt;/th&gt;
+      &lt;th&gt;纬度&lt;/th&gt;
+      &lt;th&gt;经度&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;592&lt;/th&gt;
+      &lt;td&gt;雄县&lt;/td&gt;
+      &lt;td&gt;39.02&lt;/td&gt;
+      &lt;td&gt;116.1&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [14]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;xmap&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;folium&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Map&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;location&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;39.0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mf"&gt;116.1&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [15]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;xmap&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[15]:&lt;/div&gt;
+
+&lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
+&lt;div style="width:100%;"&gt;&lt;div style="position:relative;width:100%;height:0;padding-bottom:60%;"&gt;&lt;iframe src="data:text/html;base64,CiAgICAgICAgPCFET0NUWVBFIGh0bWw+CiAgICAgICAgPGhlYWQ+CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICA8bWV0YSBodHRwLWVxdWl2PSJjb250ZW50LXR5cGUiIGNvbnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD1VVEYtOCIgLz4KICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9sZWFmbGV0LzAuNy4zL2xlYWZsZXQuanMiPjwvc2NyaXB0PgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPHNjcmlwdCBzcmM9Imh0dHBzOi8vYWpheC5nb29nbGVhcGlzLmNvbS9hamF4L2xpYnMvanF1ZXJ5LzEuMTEuMS9qcXVlcnkubWluLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL21heGNkbi5ib290c3RyYXBjZG4uY29tL2Jvb3RzdHJhcC8zLjIuMC9qcy9ib290c3RyYXAubWluLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9MZWFmbGV0LmF3ZXNvbWUtbWFya2Vycy8yLjAuMi9sZWFmbGV0LmF3ZXNvbWUtbWFya2Vycy5taW4uanMiPjwvc2NyaXB0PgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPHNjcmlwdCBzcmM9Imh0dHBzOi8vY2RuanMuY2xvdWRmbGFyZS5jb20vYWpheC9saWJzL2xlYWZsZXQubWFya2VyY2x1c3Rlci8wLjQuMC9sZWFmbGV0Lm1hcmtlcmNsdXN0ZXItc3JjLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9sZWFmbGV0Lm1hcmtlcmNsdXN0ZXIvMC40LjAvbGVhZmxldC5tYXJrZXJjbHVzdGVyLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbS9hamF4L2xpYnMvbGVhZmxldC8wLjcuMy9sZWFmbGV0LmNzcyIgLz4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9tYXhjZG4uYm9vdHN0cmFwY2RuLmNvbS9ib290c3RyYXAvMy4yLjAvY3NzL2Jvb3RzdHJhcC5taW4uY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJodHRwczovL21heGNkbi5ib290c3RyYXBjZG4uY29tL2Jvb3RzdHJhcC8zLjIuMC9jc3MvYm9vdHN0cmFwLXRoZW1lLm1pbi5jc3MiIC8+CiAgICAgICAgCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICA8bGluayByZWw9InN0eWxlc2hlZXQiIGhyZWY9Imh0dHBzOi8vbWF4Y2RuLmJvb3RzdHJhcGNkbi5jb20vZm9udC1hd2Vzb21lLzQuMS4wL2Nzcy9mb250LWF3ZXNvbWUubWluLmNzcyIgLz4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbS9hamF4L2xpYnMvTGVhZmxldC5hd2Vzb21lLW1hcmtlcnMvMi4wLjIvbGVhZmxldC5hd2Vzb21lLW1hcmtlcnMuY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9sZWFmbGV0Lm1hcmtlcmNsdXN0ZXIvMC40LjAvTWFya2VyQ2x1c3Rlci5EZWZhdWx0LmNzcyIgLz4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbS9hamF4L2xpYnMvbGVhZmxldC5tYXJrZXJjbHVzdGVyLzAuNC4wL01hcmtlckNsdXN0ZXIuY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vcHl0aG9uLXZpc3VhbGl6YXRpb24vZm9saXVtL21hc3Rlci9mb2xpdW0vdGVtcGxhdGVzL2xlYWZsZXQuYXdlc29tZS5yb3RhdGUuY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgPHN0eWxlPgoKICAgICAgICAgICAgaHRtbCwgYm9keSB7CiAgICAgICAgICAgICAgICB3aWR0aDogMTAwJTsKICAgICAgICAgICAgICAgIGhlaWdodDogMTAwJTsKICAgICAgICAgICAgICAgIG1hcmdpbjogMDsKICAgICAgICAgICAgICAgIHBhZGRpbmc6IDA7CiAgICAgICAgICAgICAgICB9CgogICAgICAgICAgICAjbWFwIHsKICAgICAgICAgICAgICAgIHBvc2l0aW9uOmFic29sdXRlOwogICAgICAgICAgICAgICAgdG9wOjA7CiAgICAgICAgICAgICAgICBib3R0b206MDsKICAgICAgICAgICAgICAgIHJpZ2h0OjA7CiAgICAgICAgICAgICAgICBsZWZ0OjA7CiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIDwvc3R5bGU+CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgPHN0eWxlPiAjbWFwXzNmNmYwOGYwYTIzYTRlNGViYzkzN2RlNGUyY2Q3NTBlIHsKICAgICAgICAgICAgICAgIHBvc2l0aW9uIDogcmVsYXRpdmU7CiAgICAgICAgICAgICAgICB3aWR0aCA6IDEwMC4wJTsKICAgICAgICAgICAgICAgIGhlaWdodDogMTAwLjAlOwogICAgICAgICAgICAgICAgbGVmdDogMC4wJTsKICAgICAgICAgICAgICAgIHRvcDogMC4wJTsKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgPC9zdHlsZT4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICA8L2hlYWQ+CiAgICAgICAgPGJvZHk+CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgPGRpdiBjbGFzcz0iZm9saXVtLW1hcCIgaWQ9Im1hcF8zZjZmMDhmMGEyM2E0ZTRlYmM5MzdkZTRlMmNkNzUwZSIgPjwvZGl2PgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgIDwvYm9keT4KICAgICAgICA8c2NyaXB0PgogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCgogICAgICAgICAgICB2YXIgc291dGhXZXN0ID0gTC5sYXRMbmcoLTkwLCAtMTgwKTsKICAgICAgICAgICAgdmFyIG5vcnRoRWFzdCA9IEwubGF0TG5nKDkwLCAxODApOwogICAgICAgICAgICB2YXIgYm91bmRzID0gTC5sYXRMbmdCb3VuZHMoc291dGhXZXN0LCBub3J0aEVhc3QpOwoKICAgICAgICAgICAgdmFyIG1hcF8zZjZmMDhmMGEyM2E0ZTRlYmM5MzdkZTRlMmNkNzUwZSA9IEwubWFwKCdtYXBfM2Y2ZjA4ZjBhMjNhNGU0ZWJjOTM3ZGU0ZTJjZDc1MGUnLCB7CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjZW50ZXI6WzM5LjAsMTE2LjFdLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgem9vbTogMTAsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBtYXhCb3VuZHM6IGJvdW5kcywKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxheWVyczogW10sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjcnM6IEwuQ1JTLkVQU0czODU3CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfSk7CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgdmFyIHRpbGVfbGF5ZXJfOWFjZGRiY2Q4N2Y2NDU1ODk3Y2E4NTc4ZWYxM2M3N2IgPSBMLnRpbGVMYXllcigKICAgICAgICAgICAgICAgICdodHRwczovL3tzfS50aWxlLm9wZW5zdHJlZXRtYXAub3JnL3t6fS97eH0ve3l9LnBuZycsCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgbWF4Wm9vbTogMTgsCiAgICAgICAgICAgICAgICAgICAgbWluWm9vbTogMSwKICAgICAgICAgICAgICAgICAgICBhdHRyaWJ1dGlvbjogJ0RhdGEgYnkgPGEgaHJlZj0iaHR0cDovL29wZW5zdHJlZXRtYXAub3JnIj5PcGVuU3RyZWV0TWFwPC9hPiwgdW5kZXIgPGEgaHJlZj0iaHR0cDovL3d3dy5vcGVuc3RyZWV0bWFwLm9yZy9jb3B5cmlnaHQiPk9EYkw8L2E+LicsCiAgICAgICAgICAgICAgICAgICAgZGV0ZWN0UmV0aW5hOiBmYWxzZQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkuYWRkVG8obWFwXzNmNmYwOGYwYTIzYTRlNGViYzkzN2RlNGUyY2Q3NTBlKTsKCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgPC9zY3JpcHQ+CiAgICAgICAg" style="position:absolute;width:100%;height:100%;left:0;top:0;"&gt;&lt;/iframe&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;在雄县这个位置添加一个标记，设置标记的图形样式：&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;这个icon的设置很有趣，可以变化出很多用途，Folium.Icon类的介绍可以通过在jupyter notebook里执行&lt;code&gt;Folium.Icon?&lt;/code&gt;显示。&lt;/p&gt;
+&lt;p&gt;简单说这个类可以设置color, icon_color, icon, angle, prefix这5个参数。color的可选项包括：&lt;code&gt;['red', 'blue', 'green', 'purple', 'orange', 'darkred', 'lightred', 'beige', 'darkblue', 'darkgreen', 'cadetblue', 'darkpurple', 'white', 'pink', 'lightblue', 'lightgreen', 'gray', 'black', 'lightgray']&lt;/code&gt; ，或者HTML颜色代码；icon_color同上；icon可以在&lt;a href="http://fontawesome.io/icons/"&gt;Font-Awesome网站&lt;/a&gt;中找到对应的名字，并设置prefix参数为’fa'；最后，angle以度为单位设置。&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [16]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;icon_kw&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;dict&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;prefix&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;'fa'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;'orange'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;icon_color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;'darkred'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;icon&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;'cny'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;icon&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;folium&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Icon&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;icon_kw&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;创建一个Marker对象，然后加入xmap地图中，注意，这里popup我直接写上了汉字“雄县”：&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [17]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;folium&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Marker&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="n"&gt;location&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;39.0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mf"&gt;116.1&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+    &lt;span class="n"&gt;popup&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;'雄县'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="n"&gt;icon&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;icon&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_to&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;xmap&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [18]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;xmap&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[18]:&lt;/div&gt;
+
+&lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
+&lt;div style="width:100%;"&gt;&lt;div style="position:relative;width:100%;height:0;padding-bottom:60%;"&gt;&lt;iframe src="data:text/html;base64,CiAgICAgICAgPCFET0NUWVBFIGh0bWw+CiAgICAgICAgPGhlYWQ+CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICA8bWV0YSBodHRwLWVxdWl2PSJjb250ZW50LXR5cGUiIGNvbnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD1VVEYtOCIgLz4KICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9sZWFmbGV0LzAuNy4zL2xlYWZsZXQuanMiPjwvc2NyaXB0PgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPHNjcmlwdCBzcmM9Imh0dHBzOi8vYWpheC5nb29nbGVhcGlzLmNvbS9hamF4L2xpYnMvanF1ZXJ5LzEuMTEuMS9qcXVlcnkubWluLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL21heGNkbi5ib290c3RyYXBjZG4uY29tL2Jvb3RzdHJhcC8zLjIuMC9qcy9ib290c3RyYXAubWluLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9MZWFmbGV0LmF3ZXNvbWUtbWFya2Vycy8yLjAuMi9sZWFmbGV0LmF3ZXNvbWUtbWFya2Vycy5taW4uanMiPjwvc2NyaXB0PgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPHNjcmlwdCBzcmM9Imh0dHBzOi8vY2RuanMuY2xvdWRmbGFyZS5jb20vYWpheC9saWJzL2xlYWZsZXQubWFya2VyY2x1c3Rlci8wLjQuMC9sZWFmbGV0Lm1hcmtlcmNsdXN0ZXItc3JjLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9sZWFmbGV0Lm1hcmtlcmNsdXN0ZXIvMC40LjAvbGVhZmxldC5tYXJrZXJjbHVzdGVyLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbS9hamF4L2xpYnMvbGVhZmxldC8wLjcuMy9sZWFmbGV0LmNzcyIgLz4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9tYXhjZG4uYm9vdHN0cmFwY2RuLmNvbS9ib290c3RyYXAvMy4yLjAvY3NzL2Jvb3RzdHJhcC5taW4uY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJodHRwczovL21heGNkbi5ib290c3RyYXBjZG4uY29tL2Jvb3RzdHJhcC8zLjIuMC9jc3MvYm9vdHN0cmFwLXRoZW1lLm1pbi5jc3MiIC8+CiAgICAgICAgCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICA8bGluayByZWw9InN0eWxlc2hlZXQiIGhyZWY9Imh0dHBzOi8vbWF4Y2RuLmJvb3RzdHJhcGNkbi5jb20vZm9udC1hd2Vzb21lLzQuMS4wL2Nzcy9mb250LWF3ZXNvbWUubWluLmNzcyIgLz4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbS9hamF4L2xpYnMvTGVhZmxldC5hd2Vzb21lLW1hcmtlcnMvMi4wLjIvbGVhZmxldC5hd2Vzb21lLW1hcmtlcnMuY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9sZWFmbGV0Lm1hcmtlcmNsdXN0ZXIvMC40LjAvTWFya2VyQ2x1c3Rlci5EZWZhdWx0LmNzcyIgLz4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbS9hamF4L2xpYnMvbGVhZmxldC5tYXJrZXJjbHVzdGVyLzAuNC4wL01hcmtlckNsdXN0ZXIuY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vcHl0aG9uLXZpc3VhbGl6YXRpb24vZm9saXVtL21hc3Rlci9mb2xpdW0vdGVtcGxhdGVzL2xlYWZsZXQuYXdlc29tZS5yb3RhdGUuY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgPHN0eWxlPgoKICAgICAgICAgICAgaHRtbCwgYm9keSB7CiAgICAgICAgICAgICAgICB3aWR0aDogMTAwJTsKICAgICAgICAgICAgICAgIGhlaWdodDogMTAwJTsKICAgICAgICAgICAgICAgIG1hcmdpbjogMDsKICAgICAgICAgICAgICAgIHBhZGRpbmc6IDA7CiAgICAgICAgICAgICAgICB9CgogICAgICAgICAgICAjbWFwIHsKICAgICAgICAgICAgICAgIHBvc2l0aW9uOmFic29sdXRlOwogICAgICAgICAgICAgICAgdG9wOjA7CiAgICAgICAgICAgICAgICBib3R0b206MDsKICAgICAgICAgICAgICAgIHJpZ2h0OjA7CiAgICAgICAgICAgICAgICBsZWZ0OjA7CiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIDwvc3R5bGU+CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgPHN0eWxlPiAjbWFwXzNmNmYwOGYwYTIzYTRlNGViYzkzN2RlNGUyY2Q3NTBlIHsKICAgICAgICAgICAgICAgIHBvc2l0aW9uIDogcmVsYXRpdmU7CiAgICAgICAgICAgICAgICB3aWR0aCA6IDEwMC4wJTsKICAgICAgICAgICAgICAgIGhlaWdodDogMTAwLjAlOwogICAgICAgICAgICAgICAgbGVmdDogMC4wJTsKICAgICAgICAgICAgICAgIHRvcDogMC4wJTsKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgPC9zdHlsZT4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICA8L2hlYWQ+CiAgICAgICAgPGJvZHk+CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgPGRpdiBjbGFzcz0iZm9saXVtLW1hcCIgaWQ9Im1hcF8zZjZmMDhmMGEyM2E0ZTRlYmM5MzdkZTRlMmNkNzUwZSIgPjwvZGl2PgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgIDwvYm9keT4KICAgICAgICA8c2NyaXB0PgogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCgogICAgICAgICAgICB2YXIgc291dGhXZXN0ID0gTC5sYXRMbmcoLTkwLCAtMTgwKTsKICAgICAgICAgICAgdmFyIG5vcnRoRWFzdCA9IEwubGF0TG5nKDkwLCAxODApOwogICAgICAgICAgICB2YXIgYm91bmRzID0gTC5sYXRMbmdCb3VuZHMoc291dGhXZXN0LCBub3J0aEVhc3QpOwoKICAgICAgICAgICAgdmFyIG1hcF8zZjZmMDhmMGEyM2E0ZTRlYmM5MzdkZTRlMmNkNzUwZSA9IEwubWFwKCdtYXBfM2Y2ZjA4ZjBhMjNhNGU0ZWJjOTM3ZGU0ZTJjZDc1MGUnLCB7CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjZW50ZXI6WzM5LjAsMTE2LjFdLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgem9vbTogMTAsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBtYXhCb3VuZHM6IGJvdW5kcywKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxheWVyczogW10sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjcnM6IEwuQ1JTLkVQU0czODU3CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfSk7CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgdmFyIHRpbGVfbGF5ZXJfOWFjZGRiY2Q4N2Y2NDU1ODk3Y2E4NTc4ZWYxM2M3N2IgPSBMLnRpbGVMYXllcigKICAgICAgICAgICAgICAgICdodHRwczovL3tzfS50aWxlLm9wZW5zdHJlZXRtYXAub3JnL3t6fS97eH0ve3l9LnBuZycsCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgbWF4Wm9vbTogMTgsCiAgICAgICAgICAgICAgICAgICAgbWluWm9vbTogMSwKICAgICAgICAgICAgICAgICAgICBhdHRyaWJ1dGlvbjogJ0RhdGEgYnkgPGEgaHJlZj0iaHR0cDovL29wZW5zdHJlZXRtYXAub3JnIj5PcGVuU3RyZWV0TWFwPC9hPiwgdW5kZXIgPGEgaHJlZj0iaHR0cDovL3d3dy5vcGVuc3RyZWV0bWFwLm9yZy9jb3B5cmlnaHQiPk9EYkw8L2E+LicsCiAgICAgICAgICAgICAgICAgICAgZGV0ZWN0UmV0aW5hOiBmYWxzZQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkuYWRkVG8obWFwXzNmNmYwOGYwYTIzYTRlNGViYzkzN2RlNGUyY2Q3NTBlKTsKCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl81MzNmYjA1NGNhYWM0MDc1OTg0Nzg2MjE1ZWQ0ZDIxZSA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM5LjAsMTE2LjFdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcF8zZjZmMDhmMGEyM2E0ZTRlYmM5MzdkZTRlMmNkNzUwZSk7CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKCiAgICAgICAgICAgICAgICB2YXIgaWNvbl9iMTYzMTE3YjVmYzE0N2RkOGEyNGE4MGI3YmVkNTkzNSA9IEwuQXdlc29tZU1hcmtlcnMuaWNvbih7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogJ2NueScsCiAgICAgICAgICAgICAgICAgICAgaWNvbkNvbG9yOiAnZGFya3JlZCcsCiAgICAgICAgICAgICAgICAgICAgbWFya2VyQ29sb3I6ICdvcmFuZ2UnLAogICAgICAgICAgICAgICAgICAgIHByZWZpeDogJ2ZhJywKICAgICAgICAgICAgICAgICAgICBleHRyYUNsYXNzZXM6ICdmYS1yb3RhdGUtMCcKICAgICAgICAgICAgICAgICAgICB9KTsKICAgICAgICAgICAgICAgIG1hcmtlcl81MzNmYjA1NGNhYWM0MDc1OTg0Nzg2MjE1ZWQ0ZDIxZS5zZXRJY29uKGljb25fYjE2MzExN2I1ZmMxNDdkZDhhMjRhODBiN2JlZDU5MzUpOwogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgICAgIHZhciBwb3B1cF9iYzBjOGU0MmY1YWE0Y2E1YWVhYjI4ZjBiZDc0MDlmZCA9IEwucG9wdXAoe21heFdpZHRoOiAnMzAwJ30pOwoKICAgICAgICAgICAgCiAgICAgICAgICAgICAgICB2YXIgaHRtbF9iM2ZkMDljYTgxOTA0Yzg5OTQ4ODYxMWZiMmFlNzFhNCA9ICQoJyAgICAgICAgIDxkaXYgaWQ9Imh0bWxfYjNmZDA5Y2E4MTkwNGM4OTk0ODg2MTFmYjJhZTcxYTQiICAgICAgICAgICAgICAgICBzdHlsZT0id2lkdGg6IDEwMC4wJTsgaGVpZ2h0OiAxMDAuMCU7Ij4gICAgICAgICAgICAgICAgIOmbhOWOvzwvZGl2PiAgICAgICAgICAgICAgICAgJylbMF07CiAgICAgICAgICAgICAgICBwb3B1cF9iYzBjOGU0MmY1YWE0Y2E1YWVhYjI4ZjBiZDc0MDlmZC5zZXRDb250ZW50KGh0bWxfYjNmZDA5Y2E4MTkwNGM4OTk0ODg2MTFmYjJhZTcxYTQpOwogICAgICAgICAgICAKCiAgICAgICAgICAgIG1hcmtlcl81MzNmYjA1NGNhYWM0MDc1OTg0Nzg2MjE1ZWQ0ZDIxZS5iaW5kUG9wdXAocG9wdXBfYmMwYzhlNDJmNWFhNGNhNWFlYWIyOGYwYmQ3NDA5ZmQpOwoKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgPC9zY3JpcHQ+CiAgICAgICAg" style="position:absolute;width:100%;height:100%;left:0;top:0;"&gt;&lt;/iframe&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;点击标志，发现显示的是乱码，其原因在于这里popup只能使用ascii编码。&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;h4 id="中文显示"&gt;中文显示&lt;a class="anchor-link" href="https://yafei777.github.io/Yafei-blog/blog/folium-popup/#%E4%B8%AD%E6%96%87%E6%98%BE%E7%A4%BA"&gt;¶&lt;/a&gt;&lt;/h4&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;我们不妨先看一下系统默认编码是什么：&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [19]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getdefaultencoding&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_subarea output_stream output_stdout output_text"&gt;
+&lt;pre&gt;utf-8
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;Folium自带一个IFrame类可以在其中嵌入html代码并解释，因此给了我们一个机会借道HTML来实现中文显示。那么首先要把汉字编码为ascii xml字符的形式。经过&lt;em&gt;多次试验&lt;/em&gt;，以下函数可以实现正确显示：&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [20]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;utf2asc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;encode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'ascii'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'xmlcharrefreplace'&lt;/span&gt;&lt;span class="p"&gt;))[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [21]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;utf2asc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'雄县'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[21]:&lt;/div&gt;
+
+
+&lt;div class="output_text output_subarea output_execute_result"&gt;
+&lt;pre&gt;'&amp;amp;#38596;&amp;amp;#21439;'&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;写一个最简单的html标记：&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [22]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;heading3&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;"""&amp;lt;h3&amp;gt;&lt;/span&gt;&lt;span class="si"&gt;{}&lt;/span&gt;&lt;span class="s2"&gt;&amp;lt;/h3&amp;gt;"""&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [23]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;heading3&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;utf2asc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'雄县'&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[23]:&lt;/div&gt;
+
+
+&lt;div class="output_text output_subarea output_execute_result"&gt;
+&lt;pre&gt;'&amp;lt;h3&amp;gt;&amp;amp;#38596;&amp;amp;#21439;&amp;lt;/h3&amp;gt;'&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [24]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;folium.element&lt;/span&gt; &lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="n"&gt;IFrame&lt;/span&gt;
+
+&lt;span class="n"&gt;iframe&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;IFrame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;heading3&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;utf2asc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'雄县￥'&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;&lt;span class="n"&gt;width&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;height&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;50&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;加上一个￥以测试对中文符号的显示能力&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [25]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;popup&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;folium&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Popup&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;iframe&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [26]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;xmap&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;folium&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Map&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;location&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;39.0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mf"&gt;116.1&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+
+&lt;span class="n"&gt;folium&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Marker&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="n"&gt;location&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;39.0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mf"&gt;116.1&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+    &lt;span class="n"&gt;popup&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;popup&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="n"&gt;icon&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;icon&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_to&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;xmap&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+&lt;span class="n"&gt;xmap&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[26]:&lt;/div&gt;
+
+&lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
+&lt;div style="width:100%;"&gt;&lt;div style="position:relative;width:100%;height:0;padding-bottom:60%;"&gt;&lt;iframe src="data:text/html;base64,CiAgICAgICAgPCFET0NUWVBFIGh0bWw+CiAgICAgICAgPGhlYWQ+CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICA8bWV0YSBodHRwLWVxdWl2PSJjb250ZW50LXR5cGUiIGNvbnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD1VVEYtOCIgLz4KICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9sZWFmbGV0LzAuNy4zL2xlYWZsZXQuanMiPjwvc2NyaXB0PgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPHNjcmlwdCBzcmM9Imh0dHBzOi8vYWpheC5nb29nbGVhcGlzLmNvbS9hamF4L2xpYnMvanF1ZXJ5LzEuMTEuMS9qcXVlcnkubWluLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL21heGNkbi5ib290c3RyYXBjZG4uY29tL2Jvb3RzdHJhcC8zLjIuMC9qcy9ib290c3RyYXAubWluLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9MZWFmbGV0LmF3ZXNvbWUtbWFya2Vycy8yLjAuMi9sZWFmbGV0LmF3ZXNvbWUtbWFya2Vycy5taW4uanMiPjwvc2NyaXB0PgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPHNjcmlwdCBzcmM9Imh0dHBzOi8vY2RuanMuY2xvdWRmbGFyZS5jb20vYWpheC9saWJzL2xlYWZsZXQubWFya2VyY2x1c3Rlci8wLjQuMC9sZWFmbGV0Lm1hcmtlcmNsdXN0ZXItc3JjLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9sZWFmbGV0Lm1hcmtlcmNsdXN0ZXIvMC40LjAvbGVhZmxldC5tYXJrZXJjbHVzdGVyLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbS9hamF4L2xpYnMvbGVhZmxldC8wLjcuMy9sZWFmbGV0LmNzcyIgLz4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9tYXhjZG4uYm9vdHN0cmFwY2RuLmNvbS9ib290c3RyYXAvMy4yLjAvY3NzL2Jvb3RzdHJhcC5taW4uY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJodHRwczovL21heGNkbi5ib290c3RyYXBjZG4uY29tL2Jvb3RzdHJhcC8zLjIuMC9jc3MvYm9vdHN0cmFwLXRoZW1lLm1pbi5jc3MiIC8+CiAgICAgICAgCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICA8bGluayByZWw9InN0eWxlc2hlZXQiIGhyZWY9Imh0dHBzOi8vbWF4Y2RuLmJvb3RzdHJhcGNkbi5jb20vZm9udC1hd2Vzb21lLzQuMS4wL2Nzcy9mb250LWF3ZXNvbWUubWluLmNzcyIgLz4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbS9hamF4L2xpYnMvTGVhZmxldC5hd2Vzb21lLW1hcmtlcnMvMi4wLjIvbGVhZmxldC5hd2Vzb21lLW1hcmtlcnMuY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9sZWFmbGV0Lm1hcmtlcmNsdXN0ZXIvMC40LjAvTWFya2VyQ2x1c3Rlci5EZWZhdWx0LmNzcyIgLz4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbS9hamF4L2xpYnMvbGVhZmxldC5tYXJrZXJjbHVzdGVyLzAuNC4wL01hcmtlckNsdXN0ZXIuY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vcHl0aG9uLXZpc3VhbGl6YXRpb24vZm9saXVtL21hc3Rlci9mb2xpdW0vdGVtcGxhdGVzL2xlYWZsZXQuYXdlc29tZS5yb3RhdGUuY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgPHN0eWxlPgoKICAgICAgICAgICAgaHRtbCwgYm9keSB7CiAgICAgICAgICAgICAgICB3aWR0aDogMTAwJTsKICAgICAgICAgICAgICAgIGhlaWdodDogMTAwJTsKICAgICAgICAgICAgICAgIG1hcmdpbjogMDsKICAgICAgICAgICAgICAgIHBhZGRpbmc6IDA7CiAgICAgICAgICAgICAgICB9CgogICAgICAgICAgICAjbWFwIHsKICAgICAgICAgICAgICAgIHBvc2l0aW9uOmFic29sdXRlOwogICAgICAgICAgICAgICAgdG9wOjA7CiAgICAgICAgICAgICAgICBib3R0b206MDsKICAgICAgICAgICAgICAgIHJpZ2h0OjA7CiAgICAgICAgICAgICAgICBsZWZ0OjA7CiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIDwvc3R5bGU+CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgPHN0eWxlPiAjbWFwX2I0MWQ2NjljYzVjMzQzOWI5Y2MxZGRmOTNmZGJiNjcwIHsKICAgICAgICAgICAgICAgIHBvc2l0aW9uIDogcmVsYXRpdmU7CiAgICAgICAgICAgICAgICB3aWR0aCA6IDEwMC4wJTsKICAgICAgICAgICAgICAgIGhlaWdodDogMTAwLjAlOwogICAgICAgICAgICAgICAgbGVmdDogMC4wJTsKICAgICAgICAgICAgICAgIHRvcDogMC4wJTsKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgPC9zdHlsZT4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICA8L2hlYWQ+CiAgICAgICAgPGJvZHk+CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgPGRpdiBjbGFzcz0iZm9saXVtLW1hcCIgaWQ9Im1hcF9iNDFkNjY5Y2M1YzM0MzliOWNjMWRkZjkzZmRiYjY3MCIgPjwvZGl2PgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgIDwvYm9keT4KICAgICAgICA8c2NyaXB0PgogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCgogICAgICAgICAgICB2YXIgc291dGhXZXN0ID0gTC5sYXRMbmcoLTkwLCAtMTgwKTsKICAgICAgICAgICAgdmFyIG5vcnRoRWFzdCA9IEwubGF0TG5nKDkwLCAxODApOwogICAgICAgICAgICB2YXIgYm91bmRzID0gTC5sYXRMbmdCb3VuZHMoc291dGhXZXN0LCBub3J0aEVhc3QpOwoKICAgICAgICAgICAgdmFyIG1hcF9iNDFkNjY5Y2M1YzM0MzliOWNjMWRkZjkzZmRiYjY3MCA9IEwubWFwKCdtYXBfYjQxZDY2OWNjNWMzNDM5YjljYzFkZGY5M2ZkYmI2NzAnLCB7CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjZW50ZXI6WzM5LjAsMTE2LjFdLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgem9vbTogMTAsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBtYXhCb3VuZHM6IGJvdW5kcywKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxheWVyczogW10sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjcnM6IEwuQ1JTLkVQU0czODU3CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfSk7CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgdmFyIHRpbGVfbGF5ZXJfMzJkMzlhMzNmNmZhNDMyMWFjNjM3NThjYTE0ZDIwNjYgPSBMLnRpbGVMYXllcigKICAgICAgICAgICAgICAgICdodHRwczovL3tzfS50aWxlLm9wZW5zdHJlZXRtYXAub3JnL3t6fS97eH0ve3l9LnBuZycsCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgbWF4Wm9vbTogMTgsCiAgICAgICAgICAgICAgICAgICAgbWluWm9vbTogMSwKICAgICAgICAgICAgICAgICAgICBhdHRyaWJ1dGlvbjogJ0RhdGEgYnkgPGEgaHJlZj0iaHR0cDovL29wZW5zdHJlZXRtYXAub3JnIj5PcGVuU3RyZWV0TWFwPC9hPiwgdW5kZXIgPGEgaHJlZj0iaHR0cDovL3d3dy5vcGVuc3RyZWV0bWFwLm9yZy9jb3B5cmlnaHQiPk9EYkw8L2E+LicsCiAgICAgICAgICAgICAgICAgICAgZGV0ZWN0UmV0aW5hOiBmYWxzZQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkuYWRkVG8obWFwX2I0MWQ2NjljYzVjMzQzOWI5Y2MxZGRmOTNmZGJiNjcwKTsKCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl8wOWQwMjQ4NWMzYmY0OWQ1OTExOWMyMGJlZDkwOTQzYSA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM5LjAsMTE2LjFdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcF9iNDFkNjY5Y2M1YzM0MzliOWNjMWRkZjkzZmRiYjY3MCk7CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKCiAgICAgICAgICAgICAgICB2YXIgaWNvbl9iMTYzMTE3YjVmYzE0N2RkOGEyNGE4MGI3YmVkNTkzNSA9IEwuQXdlc29tZU1hcmtlcnMuaWNvbih7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogJ2NueScsCiAgICAgICAgICAgICAgICAgICAgaWNvbkNvbG9yOiAnZGFya3JlZCcsCiAgICAgICAgICAgICAgICAgICAgbWFya2VyQ29sb3I6ICdvcmFuZ2UnLAogICAgICAgICAgICAgICAgICAgIHByZWZpeDogJ2ZhJywKICAgICAgICAgICAgICAgICAgICBleHRyYUNsYXNzZXM6ICdmYS1yb3RhdGUtMCcKICAgICAgICAgICAgICAgICAgICB9KTsKICAgICAgICAgICAgICAgIG1hcmtlcl8wOWQwMjQ4NWMzYmY0OWQ1OTExOWMyMGJlZDkwOTQzYS5zZXRJY29uKGljb25fYjE2MzExN2I1ZmMxNDdkZDhhMjRhODBiN2JlZDU5MzUpOwogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgICAgIHZhciBwb3B1cF8zMjY4YjliYzA0NTY0OTliYjA3MTVkMGU1ZTM2YzBkMyA9IEwucG9wdXAoe21heFdpZHRoOiAnMzAwJ30pOwoKICAgICAgICAgICAgCiAgICAgICAgICAgICAgICB2YXIgaV9mcmFtZV9jZjA2NDk1YjUxMmI0NWM1YTFiOTBkZDRjNjBkNjk2MSA9ICQoJzxpZnJhbWUgc3JjPSJkYXRhOnRleHQvaHRtbDtiYXNlNjQsQ2lBZ0lDQWdJQ0FnQ2lBZ0lDQWdJQ0FnSUNBZ0lEeG9NejRtSXpNNE5UazJPeVlqTWpFME16azdKaU0yTlRVd09UczhMMmd6UGdvZ0lDQWdJQ0FnSUFvZ0lDQWdJQ0FnSUE9PSIgd2lkdGg9IjEwMCIgaGVpZ2h0PSI1MCI+PC9pZnJhbWU+JylbMF07CiAgICAgICAgICAgICAgICBwb3B1cF8zMjY4YjliYzA0NTY0OTliYjA3MTVkMGU1ZTM2YzBkMy5zZXRDb250ZW50KGlfZnJhbWVfY2YwNjQ5NWI1MTJiNDVjNWExYjkwZGQ0YzYwZDY5NjEpOwogICAgICAgICAgICAKCiAgICAgICAgICAgIG1hcmtlcl8wOWQwMjQ4NWMzYmY0OWQ1OTExOWMyMGJlZDkwOTQzYS5iaW5kUG9wdXAocG9wdXBfMzI2OGI5YmMwNDU2NDk5YmIwNzE1ZDBlNWUzNmMwZDMpOwoKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgPC9zY3JpcHQ+CiAgICAgICAg" style="position:absolute;width:100%;height:100%;left:0;top:0;"&gt;&lt;/iframe&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;此时popup可以正确显示中文及符号&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;h4 id="popup美化"&gt;popup美化&lt;a class="anchor-link" href="https://yafei777.github.io/Yafei-blog/blog/folium-popup/#popup%E7%BE%8E%E5%8C%96"&gt;¶&lt;/a&gt;&lt;/h4&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;借鉴&lt;a href="https://ocefpaf.github.io/python4oceanographers/blog/2015/12/14/geopandas_folium/"&gt;Filipe的博文&lt;/a&gt;中的HTML代码以美化popup，使其呈现表格:&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;列名也需要使用编码映射：&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [27]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;utf2asc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;k&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;selected_st&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tolist&lt;/span&gt;&lt;span class="p"&gt;()}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[27]:&lt;/div&gt;
+
+
+&lt;div class="output_text output_subarea output_execute_result"&gt;
+&lt;pre&gt;{'区站号': '&amp;amp;#21306;&amp;amp;#31449;&amp;amp;#21495;',
+ '气压传感器拔海高度（米）': '&amp;amp;#27668;&amp;amp;#21387;&amp;amp;#20256;&amp;amp;#24863;&amp;amp;#22120;&amp;amp;#25300;&amp;amp;#28023;&amp;amp;#39640;&amp;amp;#24230;&amp;amp;#65288;&amp;amp;#31859;&amp;amp;#65289;',
+ '省份': '&amp;amp;#30465;&amp;amp;#20221;',
+ '站名': '&amp;amp;#31449;&amp;amp;#21517;',
+ '纬度': '&amp;amp;#32428;&amp;amp;#24230;',
+ '经度': '&amp;amp;#32463;&amp;amp;#24230;',
+ '观测场拔海高度（米）': '&amp;amp;#35266;&amp;amp;#27979;&amp;amp;#22330;&amp;amp;#25300;&amp;amp;#28023;&amp;amp;#39640;&amp;amp;#24230;&amp;amp;#65288;&amp;amp;#31859;&amp;amp;#65289;',
+ '距离雄县(km)': '&amp;amp;#36317;&amp;amp;#31163;&amp;amp;#38596;&amp;amp;#21439;(km)'}&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;popup中的HTML，以站名、站号、观测场海拔的顺序构建列表，注意看&lt;code&gt;&amp;lt;tr&amp;gt;&lt;/code&gt;部分&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [28]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;table&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;"""&lt;/span&gt;
+&lt;span class="s2"&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;
+&lt;span class="s2"&gt;&amp;lt;html&amp;gt;&lt;/span&gt;
+&lt;span class="s2"&gt;&amp;lt;head&amp;gt;&lt;/span&gt;
+&lt;span class="s2"&gt;&amp;lt;style&amp;gt;&lt;/span&gt;
+&lt;span class="s2"&gt;table {{&lt;/span&gt;
+&lt;span class="s2"&gt;    width:100%;&lt;/span&gt;
+&lt;span class="s2"&gt;}}&lt;/span&gt;
+&lt;span class="s2"&gt;table, th, td {{&lt;/span&gt;
+&lt;span class="s2"&gt;    border: 1px solid black;&lt;/span&gt;
+&lt;span class="s2"&gt;    border-collapse: collapse;&lt;/span&gt;
+&lt;span class="s2"&gt;}}&lt;/span&gt;
+&lt;span class="s2"&gt;th, td {{&lt;/span&gt;
+&lt;span class="s2"&gt;    padding: 5px;&lt;/span&gt;
+&lt;span class="s2"&gt;    text-align: left;&lt;/span&gt;
+&lt;span class="s2"&gt;}}&lt;/span&gt;
+&lt;span class="s2"&gt;table#t01 tr:nth-child(odd) {{&lt;/span&gt;
+&lt;span class="s2"&gt;    background-color: #eee;&lt;/span&gt;
+&lt;span class="s2"&gt;}}&lt;/span&gt;
+&lt;span class="s2"&gt;table#t01 tr:nth-child(even) {{&lt;/span&gt;
+&lt;span class="s2"&gt;   background-color:#fff;&lt;/span&gt;
+&lt;span class="s2"&gt;}}&lt;/span&gt;
+&lt;span class="s2"&gt;&amp;lt;/style&amp;gt;&lt;/span&gt;
+&lt;span class="s2"&gt;&amp;lt;/head&amp;gt;&lt;/span&gt;
+&lt;span class="s2"&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
+
+&lt;span class="s2"&gt;&amp;lt;table id="t01"&amp;gt;&lt;/span&gt;
+&lt;span class="s2"&gt;  &amp;lt;tr&amp;gt;&lt;/span&gt;
+&lt;span class="s2"&gt;    &amp;lt;td&amp;gt;&amp;amp;#31449;&amp;amp;#21517;&amp;lt;/td&amp;gt;&lt;/span&gt;
+&lt;span class="s2"&gt;    &amp;lt;td&amp;gt;&lt;/span&gt;&lt;span class="si"&gt;{}&lt;/span&gt;&lt;span class="s2"&gt;&amp;lt;/td&amp;gt;&lt;/span&gt;
+&lt;span class="s2"&gt;  &amp;lt;/tr&amp;gt;&lt;/span&gt;
+&lt;span class="s2"&gt;  &amp;lt;tr&amp;gt;&lt;/span&gt;
+&lt;span class="s2"&gt;    &amp;lt;td&amp;gt;&amp;amp;#21306;&amp;amp;#31449;&amp;amp;#21495;&amp;lt;/td&amp;gt;&lt;/span&gt;
+&lt;span class="s2"&gt;    &amp;lt;td&amp;gt;&lt;/span&gt;&lt;span class="si"&gt;{}&lt;/span&gt;&lt;span class="s2"&gt;&amp;lt;/td&amp;gt;&lt;/span&gt;
+&lt;span class="s2"&gt;  &amp;lt;/tr&amp;gt;&lt;/span&gt;
+&lt;span class="s2"&gt;  &amp;lt;tr&amp;gt;&lt;/span&gt;
+&lt;span class="s2"&gt;    &amp;lt;td&amp;gt;&amp;amp;#35266;&amp;amp;#27979;&amp;amp;#22330;&amp;amp;#25300;&amp;amp;#28023;&amp;amp;#39640;&amp;amp;#24230;&amp;amp;#65288;&amp;amp;#31859;&amp;amp;#65289;&amp;lt;/td&amp;gt;&lt;/span&gt;
+&lt;span class="s2"&gt;    &amp;lt;td&amp;gt;&lt;/span&gt;&lt;span class="si"&gt;{}&lt;/span&gt;&lt;span class="s2"&gt;&amp;lt;/td&amp;gt;&lt;/span&gt;
+&lt;span class="s2"&gt;  &amp;lt;/tr&amp;gt;&lt;/span&gt;
+&lt;span class="s2"&gt;&amp;lt;/table&amp;gt;&lt;/span&gt;
+&lt;span class="s2"&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
+&lt;span class="s2"&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
+&lt;span class="s2"&gt;"""&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;循环列表各行，将信息添加进地图：&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [29]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;selected_st&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;iterrows&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    
+    &lt;span class="n"&gt;iframe&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;IFrame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;utf2asc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'站名'&lt;/span&gt;&lt;span class="p"&gt;]),&lt;/span&gt;&lt;span class="n"&gt;utf2asc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'区站号'&lt;/span&gt;&lt;span class="p"&gt;]),&lt;/span&gt;&lt;span class="n"&gt;utf2asc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'观测场拔海高度（米）'&lt;/span&gt;&lt;span class="p"&gt;]))&lt;/span&gt;
+                    &lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;width&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;310&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;height&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;130&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;popup&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;folium&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Popup&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;iframe&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;max_width&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;400&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    
+    &lt;span class="n"&gt;folium&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Marker&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="n"&gt;location&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;纬度&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;经度&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+        &lt;span class="n"&gt;popup&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;popup&lt;/span&gt;
+        &lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_to&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;xmap&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [30]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;xmap&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[30]:&lt;/div&gt;
+
+&lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
+&lt;div style="width:100%;"&gt;&lt;div style="position:relative;width:100%;height:0;padding-bottom:60%;"&gt;&lt;iframe src="data:text/html;base64,CiAgICAgICAgPCFET0NUWVBFIGh0bWw+CiAgICAgICAgPGhlYWQ+CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICA8bWV0YSBodHRwLWVxdWl2PSJjb250ZW50LXR5cGUiIGNvbnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD1VVEYtOCIgLz4KICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9sZWFmbGV0LzAuNy4zL2xlYWZsZXQuanMiPjwvc2NyaXB0PgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPHNjcmlwdCBzcmM9Imh0dHBzOi8vYWpheC5nb29nbGVhcGlzLmNvbS9hamF4L2xpYnMvanF1ZXJ5LzEuMTEuMS9qcXVlcnkubWluLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL21heGNkbi5ib290c3RyYXBjZG4uY29tL2Jvb3RzdHJhcC8zLjIuMC9qcy9ib290c3RyYXAubWluLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9MZWFmbGV0LmF3ZXNvbWUtbWFya2Vycy8yLjAuMi9sZWFmbGV0LmF3ZXNvbWUtbWFya2Vycy5taW4uanMiPjwvc2NyaXB0PgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPHNjcmlwdCBzcmM9Imh0dHBzOi8vY2RuanMuY2xvdWRmbGFyZS5jb20vYWpheC9saWJzL2xlYWZsZXQubWFya2VyY2x1c3Rlci8wLjQuMC9sZWFmbGV0Lm1hcmtlcmNsdXN0ZXItc3JjLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9sZWFmbGV0Lm1hcmtlcmNsdXN0ZXIvMC40LjAvbGVhZmxldC5tYXJrZXJjbHVzdGVyLmpzIj48L3NjcmlwdD4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbS9hamF4L2xpYnMvbGVhZmxldC8wLjcuMy9sZWFmbGV0LmNzcyIgLz4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9tYXhjZG4uYm9vdHN0cmFwY2RuLmNvbS9ib290c3RyYXAvMy4yLjAvY3NzL2Jvb3RzdHJhcC5taW4uY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJodHRwczovL21heGNkbi5ib290c3RyYXBjZG4uY29tL2Jvb3RzdHJhcC8zLjIuMC9jc3MvYm9vdHN0cmFwLXRoZW1lLm1pbi5jc3MiIC8+CiAgICAgICAgCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICA8bGluayByZWw9InN0eWxlc2hlZXQiIGhyZWY9Imh0dHBzOi8vbWF4Y2RuLmJvb3RzdHJhcGNkbi5jb20vZm9udC1hd2Vzb21lLzQuMS4wL2Nzcy9mb250LWF3ZXNvbWUubWluLmNzcyIgLz4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbS9hamF4L2xpYnMvTGVhZmxldC5hd2Vzb21lLW1hcmtlcnMvMi4wLjIvbGVhZmxldC5hd2Vzb21lLW1hcmtlcnMuY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJodHRwczovL2NkbmpzLmNsb3VkZmxhcmUuY29tL2FqYXgvbGlicy9sZWFmbGV0Lm1hcmtlcmNsdXN0ZXIvMC40LjAvTWFya2VyQ2x1c3Rlci5EZWZhdWx0LmNzcyIgLz4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbS9hamF4L2xpYnMvbGVhZmxldC5tYXJrZXJjbHVzdGVyLzAuNC4wL01hcmtlckNsdXN0ZXIuY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vcHl0aG9uLXZpc3VhbGl6YXRpb24vZm9saXVtL21hc3Rlci9mb2xpdW0vdGVtcGxhdGVzL2xlYWZsZXQuYXdlc29tZS5yb3RhdGUuY3NzIiAvPgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgPHN0eWxlPgoKICAgICAgICAgICAgaHRtbCwgYm9keSB7CiAgICAgICAgICAgICAgICB3aWR0aDogMTAwJTsKICAgICAgICAgICAgICAgIGhlaWdodDogMTAwJTsKICAgICAgICAgICAgICAgIG1hcmdpbjogMDsKICAgICAgICAgICAgICAgIHBhZGRpbmc6IDA7CiAgICAgICAgICAgICAgICB9CgogICAgICAgICAgICAjbWFwIHsKICAgICAgICAgICAgICAgIHBvc2l0aW9uOmFic29sdXRlOwogICAgICAgICAgICAgICAgdG9wOjA7CiAgICAgICAgICAgICAgICBib3R0b206MDsKICAgICAgICAgICAgICAgIHJpZ2h0OjA7CiAgICAgICAgICAgICAgICBsZWZ0OjA7CiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIDwvc3R5bGU+CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgPHN0eWxlPiAjbWFwX2I0MWQ2NjljYzVjMzQzOWI5Y2MxZGRmOTNmZGJiNjcwIHsKICAgICAgICAgICAgICAgIHBvc2l0aW9uIDogcmVsYXRpdmU7CiAgICAgICAgICAgICAgICB3aWR0aCA6IDEwMC4wJTsKICAgICAgICAgICAgICAgIGhlaWdodDogMTAwLjAlOwogICAgICAgICAgICAgICAgbGVmdDogMC4wJTsKICAgICAgICAgICAgICAgIHRvcDogMC4wJTsKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgPC9zdHlsZT4KICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICA8L2hlYWQ+CiAgICAgICAgPGJvZHk+CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgPGRpdiBjbGFzcz0iZm9saXVtLW1hcCIgaWQ9Im1hcF9iNDFkNjY5Y2M1YzM0MzliOWNjMWRkZjkzZmRiYjY3MCIgPjwvZGl2PgogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgIDwvYm9keT4KICAgICAgICA8c2NyaXB0PgogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCgogICAgICAgICAgICB2YXIgc291dGhXZXN0ID0gTC5sYXRMbmcoLTkwLCAtMTgwKTsKICAgICAgICAgICAgdmFyIG5vcnRoRWFzdCA9IEwubGF0TG5nKDkwLCAxODApOwogICAgICAgICAgICB2YXIgYm91bmRzID0gTC5sYXRMbmdCb3VuZHMoc291dGhXZXN0LCBub3J0aEVhc3QpOwoKICAgICAgICAgICAgdmFyIG1hcF9iNDFkNjY5Y2M1YzM0MzliOWNjMWRkZjkzZmRiYjY3MCA9IEwubWFwKCdtYXBfYjQxZDY2OWNjNWMzNDM5YjljYzFkZGY5M2ZkYmI2NzAnLCB7CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjZW50ZXI6WzM5LjAsMTE2LjFdLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgem9vbTogMTAsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBtYXhCb3VuZHM6IGJvdW5kcywKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxheWVyczogW10sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjcnM6IEwuQ1JTLkVQU0czODU3CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfSk7CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgdmFyIHRpbGVfbGF5ZXJfMzJkMzlhMzNmNmZhNDMyMWFjNjM3NThjYTE0ZDIwNjYgPSBMLnRpbGVMYXllcigKICAgICAgICAgICAgICAgICdodHRwczovL3tzfS50aWxlLm9wZW5zdHJlZXRtYXAub3JnL3t6fS97eH0ve3l9LnBuZycsCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgbWF4Wm9vbTogMTgsCiAgICAgICAgICAgICAgICAgICAgbWluWm9vbTogMSwKICAgICAgICAgICAgICAgICAgICBhdHRyaWJ1dGlvbjogJ0RhdGEgYnkgPGEgaHJlZj0iaHR0cDovL29wZW5zdHJlZXRtYXAub3JnIj5PcGVuU3RyZWV0TWFwPC9hPiwgdW5kZXIgPGEgaHJlZj0iaHR0cDovL3d3dy5vcGVuc3RyZWV0bWFwLm9yZy9jb3B5cmlnaHQiPk9EYkw8L2E+LicsCiAgICAgICAgICAgICAgICAgICAgZGV0ZWN0UmV0aW5hOiBmYWxzZQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkuYWRkVG8obWFwX2I0MWQ2NjljYzVjMzQzOWI5Y2MxZGRmOTNmZGJiNjcwKTsKCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl8wOWQwMjQ4NWMzYmY0OWQ1OTExOWMyMGJlZDkwOTQzYSA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM5LjAsMTE2LjFdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcF9iNDFkNjY5Y2M1YzM0MzliOWNjMWRkZjkzZmRiYjY3MCk7CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKCiAgICAgICAgICAgICAgICB2YXIgaWNvbl9iMTYzMTE3YjVmYzE0N2RkOGEyNGE4MGI3YmVkNTkzNSA9IEwuQXdlc29tZU1hcmtlcnMuaWNvbih7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogJ2NueScsCiAgICAgICAgICAgICAgICAgICAgaWNvbkNvbG9yOiAnZGFya3JlZCcsCiAgICAgICAgICAgICAgICAgICAgbWFya2VyQ29sb3I6ICdvcmFuZ2UnLAogICAgICAgICAgICAgICAgICAgIHByZWZpeDogJ2ZhJywKICAgICAgICAgICAgICAgICAgICBleHRyYUNsYXNzZXM6ICdmYS1yb3RhdGUtMCcKICAgICAgICAgICAgICAgICAgICB9KTsKICAgICAgICAgICAgICAgIG1hcmtlcl8wOWQwMjQ4NWMzYmY0OWQ1OTExOWMyMGJlZDkwOTQzYS5zZXRJY29uKGljb25fYjE2MzExN2I1ZmMxNDdkZDhhMjRhODBiN2JlZDU5MzUpOwogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgICAgIHZhciBwb3B1cF8zMjY4YjliYzA0NTY0OTliYjA3MTVkMGU1ZTM2YzBkMyA9IEwucG9wdXAoe21heFdpZHRoOiAnMzAwJ30pOwoKICAgICAgICAgICAgCiAgICAgICAgICAgICAgICB2YXIgaV9mcmFtZV9jZjA2NDk1YjUxMmI0NWM1YTFiOTBkZDRjNjBkNjk2MSA9ICQoJzxpZnJhbWUgc3JjPSJkYXRhOnRleHQvaHRtbDtiYXNlNjQsQ2lBZ0lDQWdJQ0FnQ2lBZ0lDQWdJQ0FnSUNBZ0lEeG9NejRtSXpNNE5UazJPeVlqTWpFME16azdKaU0yTlRVd09UczhMMmd6UGdvZ0lDQWdJQ0FnSUFvZ0lDQWdJQ0FnSUE9PSIgd2lkdGg9IjEwMCIgaGVpZ2h0PSI1MCI+PC9pZnJhbWU+JylbMF07CiAgICAgICAgICAgICAgICBwb3B1cF8zMjY4YjliYzA0NTY0OTliYjA3MTVkMGU1ZTM2YzBkMy5zZXRDb250ZW50KGlfZnJhbWVfY2YwNjQ5NWI1MTJiNDVjNWExYjkwZGQ0YzYwZDY5NjEpOwogICAgICAgICAgICAKCiAgICAgICAgICAgIG1hcmtlcl8wOWQwMjQ4NWMzYmY0OWQ1OTExOWMyMGJlZDkwOTQzYS5iaW5kUG9wdXAocG9wdXBfMzI2OGI5YmMwNDU2NDk5YmIwNzE1ZDBlNWUzNmMwZDMpOwoKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl84MTY5NDU0OTVlMjM0NjUwOTJiM2VmMWJmOGEwNGFiMiA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM4LjkzLDExNS45M10sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFwX2I0MWQ2NjljYzVjMzQzOWI5Y2MxZGRmOTNmZGJiNjcwKTsKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIAogICAgICAgICAgICB2YXIgcG9wdXBfYzc0NWJhZmNmYzVmNGRjZmIwOGMzNzAxZGIwY2U3MmYgPSBMLnBvcHVwKHttYXhXaWR0aDogJzQwMCd9KTsKCiAgICAgICAgICAgIAogICAgICAgICAgICAgICAgdmFyIGlfZnJhbWVfZDliMWY1OGZiNGIyNGI4ZmJmYzU4YmQ2YmUzMmUxYWMgPSAkKCc8aWZyYW1lIHNyYz0iZGF0YTp0ZXh0L2h0bWw7YmFzZTY0LENpQWdJQ0FnSUNBZ0NpQWdJQ0FnSUNBZ0lDQWdJQW84SVVSUFExUlpVRVVnYUhSdGJENEtQR2gwYld3K0NqeG9aV0ZrUGdvOGMzUjViR1UrQ25SaFlteGxJSHNLSUNBZ0lIZHBaSFJvT2pFd01DVTdDbjBLZEdGaWJHVXNJSFJvTENCMFpDQjdDaUFnSUNCaWIzSmtaWEk2SURGd2VDQnpiMnhwWkNCaWJHRmphenNLSUNBZ0lHSnZjbVJsY2kxamIyeHNZWEJ6WlRvZ1kyOXNiR0Z3YzJVN0NuMEtkR2dzSUhSa0lIc0tJQ0FnSUhCaFpHUnBibWM2SURWd2VEc0tJQ0FnSUhSbGVIUXRZV3hwWjI0NklHeGxablE3Q24wS2RHRmliR1VqZERBeElIUnlPbTUwYUMxamFHbHNaQ2h2WkdRcElIc0tJQ0FnSUdKaFkydG5jbTkxYm1RdFkyOXNiM0k2SUNObFpXVTdDbjBLZEdGaWJHVWpkREF4SUhSeU9tNTBhQzFqYUdsc1pDaGxkbVZ1S1NCN0NpQWdJR0poWTJ0bmNtOTFibVF0WTI5c2IzSTZJMlptWmpzS2ZRbzhMM04wZVd4bFBnbzhMMmhsWVdRK0NqeGliMlI1UGdvS1BIUmhZbXhsSUdsa1BTSjBNREVpUGdvZ0lEeDBjajRLSUNBZ0lEeDBaRDRtSXpNeE5EUTVPeVlqTWpFMU1UYzdQQzkwWkQ0S0lDQWdJRHgwWkQ0bUl6SXpORE16T3lZak1qWXdNekk3UEM5MFpENEtJQ0E4TDNSeVBnb2dJRHgwY2o0S0lDQWdJRHgwWkQ0bUl6SXhNekEyT3lZak16RTBORGs3SmlNeU1UUTVOVHM4TDNSa1Bnb2dJQ0FnUEhSa1BqVTBOakExUEM5MFpENEtJQ0E4TDNSeVBnb2dJRHgwY2o0S0lDQWdJRHgwWkQ0bUl6TTFNalkyT3lZak1qYzVOems3SmlNeU1qTXpNRHNtSXpJMU16QXdPeVlqTWpnd01qTTdKaU16T1RZME1Ec21JekkwTWpNd095WWpOalV5T0RnN0ppTXpNVGcxT1RzbUl6WTFNamc1T3p3dmRHUStDaUFnSUNBOGRHUStOQzQwUEM5MFpENEtJQ0E4TDNSeVBnbzhMM1JoWW14bFBnbzhMMkp2WkhrK0Nqd3ZhSFJ0YkQ0S0lDQWdJQ0FnSUNBS0lDQWdJQ0FnSUNBPSIgd2lkdGg9IjMxMCIgaGVpZ2h0PSIxMzAiPjwvaWZyYW1lPicpWzBdOwogICAgICAgICAgICAgICAgcG9wdXBfYzc0NWJhZmNmYzVmNGRjZmIwOGMzNzAxZGIwY2U3MmYuc2V0Q29udGVudChpX2ZyYW1lX2Q5YjFmNThmYjRiMjRiOGZiZmM1OGJkNmJlMzJlMWFjKTsKICAgICAgICAgICAgCgogICAgICAgICAgICBtYXJrZXJfODE2OTQ1NDk1ZTIzNDY1MDkyYjNlZjFiZjhhMDRhYjIuYmluZFBvcHVwKHBvcHVwX2M3NDViYWZjZmM1ZjRkY2ZiMDhjMzcwMWRiMGNlNzJmKTsKCiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfZDZlNDA1ZTIxZWZkNGRhNzk1MTVlMjBkZmJlOWEzMWQgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFszOS4wNywxMTUuODJdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcF9iNDFkNjY5Y2M1YzM0MzliOWNjMWRkZjkzZmRiYjY3MCk7CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgdmFyIHBvcHVwXzA0ZTBmYTBmMDE4MTQ3NDM4NTk3MzQ2MGI3ZDFiNGFjID0gTC5wb3B1cCh7bWF4V2lkdGg6ICc0MDAnfSk7CgogICAgICAgICAgICAKICAgICAgICAgICAgICAgIHZhciBpX2ZyYW1lXzQ2MzU2NjMxNGY1YzQzYTk4MTE1NWY5ZTNiM2NjYjAwID0gJCgnPGlmcmFtZSBzcmM9ImRhdGE6dGV4dC9odG1sO2Jhc2U2NCxDaUFnSUNBZ0lDQWdDaUFnSUNBZ0lDQWdJQ0FnSUFvOElVUlBRMVJaVUVVZ2FIUnRiRDRLUEdoMGJXdytDanhvWldGa1BnbzhjM1I1YkdVK0NuUmhZbXhsSUhzS0lDQWdJSGRwWkhSb09qRXdNQ1U3Q24wS2RHRmliR1VzSUhSb0xDQjBaQ0I3Q2lBZ0lDQmliM0prWlhJNklERndlQ0J6YjJ4cFpDQmliR0ZqYXpzS0lDQWdJR0p2Y21SbGNpMWpiMnhzWVhCelpUb2dZMjlzYkdGd2MyVTdDbjBLZEdnc0lIUmtJSHNLSUNBZ0lIQmhaR1JwYm1jNklEVndlRHNLSUNBZ0lIUmxlSFF0WVd4cFoyNDZJR3hsWm5RN0NuMEtkR0ZpYkdVamREQXhJSFJ5T201MGFDMWphR2xzWkNodlpHUXBJSHNLSUNBZ0lHSmhZMnRuY205MWJtUXRZMjlzYjNJNklDTmxaV1U3Q24wS2RHRmliR1VqZERBeElIUnlPbTUwYUMxamFHbHNaQ2hsZG1WdUtTQjdDaUFnSUdKaFkydG5jbTkxYm1RdFkyOXNiM0k2STJabVpqc0tmUW84TDNOMGVXeGxQZ284TDJobFlXUStDanhpYjJSNVBnb0tQSFJoWW14bElHbGtQU0owTURFaVBnb2dJRHgwY2o0S0lDQWdJRHgwWkQ0bUl6TXhORFE1T3lZak1qRTFNVGM3UEM5MFpENEtJQ0FnSUR4MFpENG1Jekl6TkRneE95WWpNakkwTnpnN1BDOTBaRDRLSUNBOEwzUnlQZ29nSUR4MGNqNEtJQ0FnSUR4MFpENG1Jekl4TXpBMk95WWpNekUwTkRrN0ppTXlNVFE1TlRzOEwzUmtQZ29nSUNBZ1BIUmtQalUwTlRBelBDOTBaRDRLSUNBOEwzUnlQZ29nSUR4MGNqNEtJQ0FnSUR4MFpENG1Jek0xTWpZMk95WWpNamM1TnprN0ppTXlNak16TURzbUl6STFNekF3T3lZak1qZ3dNak03SmlNek9UWTBNRHNtSXpJME1qTXdPeVlqTmpVeU9EZzdKaU16TVRnMU9Uc21JelkxTWpnNU96d3ZkR1ErQ2lBZ0lDQThkR1ErTVRJdU9Ed3ZkR1ErQ2lBZ1BDOTBjajRLUEM5MFlXSnNaVDRLUEM5aWIyUjVQZ284TDJoMGJXdytDaUFnSUNBZ0lDQWdDaUFnSUNBZ0lDQWciIHdpZHRoPSIzMTAiIGhlaWdodD0iMTMwIj48L2lmcmFtZT4nKVswXTsKICAgICAgICAgICAgICAgIHBvcHVwXzA0ZTBmYTBmMDE4MTQ3NDM4NTk3MzQ2MGI3ZDFiNGFjLnNldENvbnRlbnQoaV9mcmFtZV80NjM1NjYzMTRmNWM0M2E5ODExNTVmOWUzYjNjY2IwMCk7CiAgICAgICAgICAgIAoKICAgICAgICAgICAgbWFya2VyX2Q2ZTQwNWUyMWVmZDRkYTc5NTE1ZTIwZGZiZTlhMzFkLmJpbmRQb3B1cChwb3B1cF8wNGUwZmEwZjAxODE0NzQzODU5NzM0NjBiN2QxYjRhYyk7CgogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzE5Y2FjYjJjMjQ0MjRmNDdhZjRlN2UyNGNjZDUyZDAyID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbMzkuMTcsMTE2LjRdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcF9iNDFkNjY5Y2M1YzM0MzliOWNjMWRkZjkzZmRiYjY3MCk7CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgdmFyIHBvcHVwXzRmZmNmYTA4MmRhZjRkMGM4ZmY2Njc4YzA0YzgwNDNiID0gTC5wb3B1cCh7bWF4V2lkdGg6ICc0MDAnfSk7CgogICAgICAgICAgICAKICAgICAgICAgICAgICAgIHZhciBpX2ZyYW1lXzc4MjM0MzI4MTQyZjQ5MTliNTJkZDE3YjQyZTYxMDY1ID0gJCgnPGlmcmFtZSBzcmM9ImRhdGE6dGV4dC9odG1sO2Jhc2U2NCxDaUFnSUNBZ0lDQWdDaUFnSUNBZ0lDQWdJQ0FnSUFvOElVUlBRMVJaVUVVZ2FIUnRiRDRLUEdoMGJXdytDanhvWldGa1BnbzhjM1I1YkdVK0NuUmhZbXhsSUhzS0lDQWdJSGRwWkhSb09qRXdNQ1U3Q24wS2RHRmliR1VzSUhSb0xDQjBaQ0I3Q2lBZ0lDQmliM0prWlhJNklERndlQ0J6YjJ4cFpDQmliR0ZqYXpzS0lDQWdJR0p2Y21SbGNpMWpiMnhzWVhCelpUb2dZMjlzYkdGd2MyVTdDbjBLZEdnc0lIUmtJSHNLSUNBZ0lIQmhaR1JwYm1jNklEVndlRHNLSUNBZ0lIUmxlSFF0WVd4cFoyNDZJR3hsWm5RN0NuMEtkR0ZpYkdVamREQXhJSFJ5T201MGFDMWphR2xzWkNodlpHUXBJSHNLSUNBZ0lHSmhZMnRuY205MWJtUXRZMjlzYjNJNklDTmxaV1U3Q24wS2RHRmliR1VqZERBeElIUnlPbTUwYUMxamFHbHNaQ2hsZG1WdUtTQjdDaUFnSUdKaFkydG5jbTkxYm1RdFkyOXNiM0k2STJabVpqc0tmUW84TDNOMGVXeGxQZ284TDJobFlXUStDanhpYjJSNVBnb0tQSFJoWW14bElHbGtQU0owTURFaVBnb2dJRHgwY2o0S0lDQWdJRHgwWkQ0bUl6TXhORFE1T3lZak1qRTFNVGM3UEM5MFpENEtJQ0FnSUR4MFpENG1Jek00TnpFeU95WWpNalF3TXpBN1BDOTBaRDRLSUNBOEwzUnlQZ29nSUR4MGNqNEtJQ0FnSUR4MFpENG1Jekl4TXpBMk95WWpNekUwTkRrN0ppTXlNVFE1TlRzOEwzUmtQZ29nSUNBZ1BIUmtQalUwTlRFNFBDOTBaRDRLSUNBOEwzUnlQZ29nSUR4MGNqNEtJQ0FnSUR4MFpENG1Jek0xTWpZMk95WWpNamM1TnprN0ppTXlNak16TURzbUl6STFNekF3T3lZak1qZ3dNak03SmlNek9UWTBNRHNtSXpJME1qTXdPeVlqTmpVeU9EZzdKaU16TVRnMU9Uc21JelkxTWpnNU96d3ZkR1ErQ2lBZ0lDQThkR1ErT0M0NVBDOTBaRDRLSUNBOEwzUnlQZ284TDNSaFlteGxQZ284TDJKdlpIaytDand2YUhSdGJENEtJQ0FnSUNBZ0lDQUtJQ0FnSUNBZ0lDQT0iIHdpZHRoPSIzMTAiIGhlaWdodD0iMTMwIj48L2lmcmFtZT4nKVswXTsKICAgICAgICAgICAgICAgIHBvcHVwXzRmZmNmYTA4MmRhZjRkMGM4ZmY2Njc4YzA0YzgwNDNiLnNldENvbnRlbnQoaV9mcmFtZV83ODIzNDMyODE0MmY0OTE5YjUyZGQxN2I0MmU2MTA2NSk7CiAgICAgICAgICAgIAoKICAgICAgICAgICAgbWFya2VyXzE5Y2FjYjJjMjQ0MjRmNDdhZjRlN2UyNGNjZDUyZDAyLmJpbmRQb3B1cChwb3B1cF80ZmZjZmEwODJkYWY0ZDBjOGZmNjY3OGMwNGM4MDQzYik7CgogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCgogICAgICAgICAgICB2YXIgbWFya2VyX2I0NTU4MDE0OTY1ODQwNjY5MjdjYTU2OTgwMGRiZjk4ID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbMzguNzMsMTE2LjFdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcF9iNDFkNjY5Y2M1YzM0MzliOWNjMWRkZjkzZmRiYjY3MCk7CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgdmFyIHBvcHVwX2MzYzUwZWU5YTEwMjQyZDI5YmMzOTk1NGQxMzhkMjJlID0gTC5wb3B1cCh7bWF4V2lkdGg6ICc0MDAnfSk7CgogICAgICAgICAgICAKICAgICAgICAgICAgICAgIHZhciBpX2ZyYW1lXzdiOGYzOWI4NTQzNDRkODE5N2Q3MTM0Y2QxOWVmYjU1ID0gJCgnPGlmcmFtZSBzcmM9ImRhdGE6dGV4dC9odG1sO2Jhc2U2NCxDaUFnSUNBZ0lDQWdDaUFnSUNBZ0lDQWdJQ0FnSUFvOElVUlBRMVJaVUVVZ2FIUnRiRDRLUEdoMGJXdytDanhvWldGa1BnbzhjM1I1YkdVK0NuUmhZbXhsSUhzS0lDQWdJSGRwWkhSb09qRXdNQ1U3Q24wS2RHRmliR1VzSUhSb0xDQjBaQ0I3Q2lBZ0lDQmliM0prWlhJNklERndlQ0J6YjJ4cFpDQmliR0ZqYXpzS0lDQWdJR0p2Y21SbGNpMWpiMnhzWVhCelpUb2dZMjlzYkdGd2MyVTdDbjBLZEdnc0lIUmtJSHNLSUNBZ0lIQmhaR1JwYm1jNklEVndlRHNLSUNBZ0lIUmxlSFF0WVd4cFoyNDZJR3hsWm5RN0NuMEtkR0ZpYkdVamREQXhJSFJ5T201MGFDMWphR2xzWkNodlpHUXBJSHNLSUNBZ0lHSmhZMnRuY205MWJtUXRZMjlzYjNJNklDTmxaV1U3Q24wS2RHRmliR1VqZERBeElIUnlPbTUwYUMxamFHbHNaQ2hsZG1WdUtTQjdDaUFnSUdKaFkydG5jbTkxYm1RdFkyOXNiM0k2STJabVpqc0tmUW84TDNOMGVXeGxQZ284TDJobFlXUStDanhpYjJSNVBnb0tQSFJoWW14bElHbGtQU0owTURFaVBnb2dJRHgwY2o0S0lDQWdJRHgwWkQ0bUl6TXhORFE1T3lZak1qRTFNVGM3UEM5MFpENEtJQ0FnSUR4MFpENG1Jekl3TWpFNU95WWpNVGs1T1RJN1BDOTBaRDRLSUNBOEwzUnlQZ29nSUR4MGNqNEtJQ0FnSUR4MFpENG1Jekl4TXpBMk95WWpNekUwTkRrN0ppTXlNVFE1TlRzOEwzUmtQZ29nSUNBZ1BIUmtQalUwTmpFd1BDOTBaRDRLSUNBOEwzUnlQZ29nSUR4MGNqNEtJQ0FnSUR4MFpENG1Jek0xTWpZMk95WWpNamM1TnprN0ppTXlNak16TURzbUl6STFNekF3T3lZak1qZ3dNak03SmlNek9UWTBNRHNtSXpJME1qTXdPeVlqTmpVeU9EZzdKaU16TVRnMU9Uc21JelkxTWpnNU96d3ZkR1ErQ2lBZ0lDQThkR1ErT0M0eFBDOTBaRDRLSUNBOEwzUnlQZ284TDNSaFlteGxQZ284TDJKdlpIaytDand2YUhSdGJENEtJQ0FnSUNBZ0lDQUtJQ0FnSUNBZ0lDQT0iIHdpZHRoPSIzMTAiIGhlaWdodD0iMTMwIj48L2lmcmFtZT4nKVswXTsKICAgICAgICAgICAgICAgIHBvcHVwX2MzYzUwZWU5YTEwMjQyZDI5YmMzOTk1NGQxMzhkMjJlLnNldENvbnRlbnQoaV9mcmFtZV83YjhmMzliODU0MzQ0ZDgxOTdkNzEzNGNkMTllZmI1NSk7CiAgICAgICAgICAgIAoKICAgICAgICAgICAgbWFya2VyX2I0NTU4MDE0OTY1ODQwNjY5MjdjYTU2OTgwMGRiZjk4LmJpbmRQb3B1cChwb3B1cF9jM2M1MGVlOWExMDI0MmQyOWJjMzk5NTRkMTM4ZDIyZSk7CgogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzNmZjNiNmZhNzBmNTQxNjNhYjVjOTNiMjcwNWRhYjJmID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbMzguODUsMTE2LjQ1XSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXBfYjQxZDY2OWNjNWMzNDM5YjljYzFkZGY5M2ZkYmI2NzApOwogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgICAgIHZhciBwb3B1cF8xNTZjY2ZhMDdmNmU0MTkzOWU2NzA0ODJkMGNiMzliNSA9IEwucG9wdXAoe21heFdpZHRoOiAnNDAwJ30pOwoKICAgICAgICAgICAgCiAgICAgICAgICAgICAgICB2YXIgaV9mcmFtZV85YzJkZTA5YTQ0YmI0OTI3OTBhM2I1MDBlYmQyNDNiMiA9ICQoJzxpZnJhbWUgc3JjPSJkYXRhOnRleHQvaHRtbDtiYXNlNjQsQ2lBZ0lDQWdJQ0FnQ2lBZ0lDQWdJQ0FnSUNBZ0lBbzhJVVJQUTFSWlVFVWdhSFJ0YkQ0S1BHaDBiV3crQ2p4b1pXRmtQZ284YzNSNWJHVStDblJoWW14bElIc0tJQ0FnSUhkcFpIUm9PakV3TUNVN0NuMEtkR0ZpYkdVc0lIUm9MQ0IwWkNCN0NpQWdJQ0JpYjNKa1pYSTZJREZ3ZUNCemIyeHBaQ0JpYkdGamF6c0tJQ0FnSUdKdmNtUmxjaTFqYjJ4c1lYQnpaVG9nWTI5c2JHRndjMlU3Q24wS2RHZ3NJSFJrSUhzS0lDQWdJSEJoWkdScGJtYzZJRFZ3ZURzS0lDQWdJSFJsZUhRdFlXeHBaMjQ2SUd4bFpuUTdDbjBLZEdGaWJHVWpkREF4SUhSeU9tNTBhQzFqYUdsc1pDaHZaR1FwSUhzS0lDQWdJR0poWTJ0bmNtOTFibVF0WTI5c2IzSTZJQ05sWldVN0NuMEtkR0ZpYkdVamREQXhJSFJ5T201MGFDMWphR2xzWkNobGRtVnVLU0I3Q2lBZ0lHSmhZMnRuY205MWJtUXRZMjlzYjNJNkkyWm1aanNLZlFvOEwzTjBlV3hsUGdvOEwyaGxZV1ErQ2p4aWIyUjVQZ29LUEhSaFlteGxJR2xrUFNKME1ERWlQZ29nSUR4MGNqNEtJQ0FnSUR4MFpENG1Jek14TkRRNU95WWpNakUxTVRjN1BDOTBaRDRLSUNBZ0lEeDBaRDRtSXpJMU9Ua3hPeVlqTWpNME16TTdQQzkwWkQ0S0lDQThMM1J5UGdvZ0lEeDBjajRLSUNBZ0lEeDBaRDRtSXpJeE16QTJPeVlqTXpFME5EazdKaU15TVRRNU5UczhMM1JrUGdvZ0lDQWdQSFJrUGpVME5qRXlQQzkwWkQ0S0lDQThMM1J5UGdvZ0lEeDBjajRLSUNBZ0lEeDBaRDRtSXpNMU1qWTJPeVlqTWpjNU56azdKaU15TWpNek1Ec21JekkxTXpBd095WWpNamd3TWpNN0ppTXpPVFkwTURzbUl6STBNak13T3lZak5qVXlPRGc3SmlNek1UZzFPVHNtSXpZMU1qZzVPend2ZEdRK0NpQWdJQ0E4ZEdRK05DNHpQQzkwWkQ0S0lDQThMM1J5UGdvOEwzUmhZbXhsUGdvOEwySnZaSGsrQ2p3dmFIUnRiRDRLSUNBZ0lDQWdJQ0FLSUNBZ0lDQWdJQ0E9IiB3aWR0aD0iMzEwIiBoZWlnaHQ9IjEzMCI+PC9pZnJhbWU+JylbMF07CiAgICAgICAgICAgICAgICBwb3B1cF8xNTZjY2ZhMDdmNmU0MTkzOWU2NzA0ODJkMGNiMzliNS5zZXRDb250ZW50KGlfZnJhbWVfOWMyZGUwOWE0NGJiNDkyNzkwYTNiNTAwZWJkMjQzYjIpOwogICAgICAgICAgICAKCiAgICAgICAgICAgIG1hcmtlcl8zZmYzYjZmYTcwZjU0MTYzYWI1YzkzYjI3MDVkYWIyZi5iaW5kUG9wdXAocG9wdXBfMTU2Y2NmYTA3ZjZlNDE5MzllNjcwNDgyZDBjYjM5YjUpOwoKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl80NmEzOTAyMjRkZDI0NmRhOGM2Zjk1NTNkM2NhMDMzMiA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM5LjMyLDExNS45NV0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFwX2I0MWQ2NjljYzVjMzQzOWI5Y2MxZGRmOTNmZGJiNjcwKTsKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIAogICAgICAgICAgICB2YXIgcG9wdXBfYjk1NjAxN2IxNjJiNDJlY2IxMjZmODU0MzY1ZmYyNzkgPSBMLnBvcHVwKHttYXhXaWR0aDogJzQwMCd9KTsKCiAgICAgICAgICAgIAogICAgICAgICAgICAgICAgdmFyIGlfZnJhbWVfYTBkOWNiY2MzZjg4NDQ4ZmFjMjUzMzM4YzFjMGIxZmIgPSAkKCc8aWZyYW1lIHNyYz0iZGF0YTp0ZXh0L2h0bWw7YmFzZTY0LENpQWdJQ0FnSUNBZ0NpQWdJQ0FnSUNBZ0lDQWdJQW84SVVSUFExUlpVRVVnYUhSdGJENEtQR2gwYld3K0NqeG9aV0ZrUGdvOGMzUjViR1UrQ25SaFlteGxJSHNLSUNBZ0lIZHBaSFJvT2pFd01DVTdDbjBLZEdGaWJHVXNJSFJvTENCMFpDQjdDaUFnSUNCaWIzSmtaWEk2SURGd2VDQnpiMnhwWkNCaWJHRmphenNLSUNBZ0lHSnZjbVJsY2kxamIyeHNZWEJ6WlRvZ1kyOXNiR0Z3YzJVN0NuMEtkR2dzSUhSa0lIc0tJQ0FnSUhCaFpHUnBibWM2SURWd2VEc0tJQ0FnSUhSbGVIUXRZV3hwWjI0NklHeGxablE3Q24wS2RHRmliR1VqZERBeElIUnlPbTUwYUMxamFHbHNaQ2h2WkdRcElIc0tJQ0FnSUdKaFkydG5jbTkxYm1RdFkyOXNiM0k2SUNObFpXVTdDbjBLZEdGaWJHVWpkREF4SUhSeU9tNTBhQzFqYUdsc1pDaGxkbVZ1S1NCN0NpQWdJR0poWTJ0bmNtOTFibVF0WTI5c2IzSTZJMlptWmpzS2ZRbzhMM04wZVd4bFBnbzhMMmhsWVdRK0NqeGliMlI1UGdvS1BIUmhZbXhsSUdsa1BTSjBNREVpUGdvZ0lEeDBjajRLSUNBZ0lEeDBaRDRtSXpNeE5EUTVPeVlqTWpFMU1UYzdQQzkwWkQ0S0lDQWdJRHgwWkQ0bUl6TTVOalF3T3lZak16QTROalU3SmlNeU5ESXhOVHM4TDNSa1Bnb2dJRHd2ZEhJK0NpQWdQSFJ5UGdvZ0lDQWdQSFJrUGlZak1qRXpNRFk3SmlNek1UUTBPVHNtSXpJeE5EazFPend2ZEdRK0NpQWdJQ0E4ZEdRK05UUTFNRFk4TDNSa1Bnb2dJRHd2ZEhJK0NpQWdQSFJ5UGdvZ0lDQWdQSFJrUGlZak16VXlOalk3SmlNeU56azNPVHNtSXpJeU16TXdPeVlqTWpVek1EQTdKaU15T0RBeU16c21Jek01TmpRd095WWpNalF5TXpBN0ppTTJOVEk0T0RzbUl6TXhPRFU1T3lZak5qVXlPRGs3UEM5MFpENEtJQ0FnSUR4MFpENHlOQzQyUEM5MFpENEtJQ0E4TDNSeVBnbzhMM1JoWW14bFBnbzhMMkp2WkhrK0Nqd3ZhSFJ0YkQ0S0lDQWdJQ0FnSUNBS0lDQWdJQ0FnSUNBPSIgd2lkdGg9IjMxMCIgaGVpZ2h0PSIxMzAiPjwvaWZyYW1lPicpWzBdOwogICAgICAgICAgICAgICAgcG9wdXBfYjk1NjAxN2IxNjJiNDJlY2IxMjZmODU0MzY1ZmYyNzkuc2V0Q29udGVudChpX2ZyYW1lX2EwZDljYmNjM2Y4ODQ0OGZhYzI1MzMzOGMxYzBiMWZiKTsKICAgICAgICAgICAgCgogICAgICAgICAgICBtYXJrZXJfNDZhMzkwMjI0ZGQyNDZkYThjNmY5NTUzZDNjYTAzMzIuYmluZFBvcHVwKHBvcHVwX2I5NTYwMTdiMTYyYjQyZWNiMTI2Zjg1NDM2NWZmMjc5KTsKCiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKCiAgICAgICAgICAgIHZhciBtYXJrZXJfMmQxY2MxMmRlNjI0NDU4MmJlMzFjMjljMTc2ZDEyZGEgPSBMLm1hcmtlcigKICAgICAgICAgICAgICAgIFszOC45OCwxMTUuNjVdLAogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIGljb246IG5ldyBMLkljb24uRGVmYXVsdCgpCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgLmFkZFRvKG1hcF9iNDFkNjY5Y2M1YzM0MzliOWNjMWRkZjkzZmRiYjY3MCk7CiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAgICAgdmFyIHBvcHVwXzBkODFhOGYzMWUwZDQzMzU5Y2JlODIwZmZkN2U2OTkzID0gTC5wb3B1cCh7bWF4V2lkdGg6ICc0MDAnfSk7CgogICAgICAgICAgICAKICAgICAgICAgICAgICAgIHZhciBpX2ZyYW1lXzM0MTZhNDEyNzJkOTRkNmQ5Yzg4N2E0N2Q0MGUwNTFlID0gJCgnPGlmcmFtZSBzcmM9ImRhdGE6dGV4dC9odG1sO2Jhc2U2NCxDaUFnSUNBZ0lDQWdDaUFnSUNBZ0lDQWdJQ0FnSUFvOElVUlBRMVJaVUVVZ2FIUnRiRDRLUEdoMGJXdytDanhvWldGa1BnbzhjM1I1YkdVK0NuUmhZbXhsSUhzS0lDQWdJSGRwWkhSb09qRXdNQ1U3Q24wS2RHRmliR1VzSUhSb0xDQjBaQ0I3Q2lBZ0lDQmliM0prWlhJNklERndlQ0J6YjJ4cFpDQmliR0ZqYXpzS0lDQWdJR0p2Y21SbGNpMWpiMnhzWVhCelpUb2dZMjlzYkdGd2MyVTdDbjBLZEdnc0lIUmtJSHNLSUNBZ0lIQmhaR1JwYm1jNklEVndlRHNLSUNBZ0lIUmxlSFF0WVd4cFoyNDZJR3hsWm5RN0NuMEtkR0ZpYkdVamREQXhJSFJ5T201MGFDMWphR2xzWkNodlpHUXBJSHNLSUNBZ0lHSmhZMnRuY205MWJtUXRZMjlzYjNJNklDTmxaV1U3Q24wS2RHRmliR1VqZERBeElIUnlPbTUwYUMxamFHbHNaQ2hsZG1WdUtTQjdDaUFnSUdKaFkydG5jbTkxYm1RdFkyOXNiM0k2STJabVpqc0tmUW84TDNOMGVXeGxQZ284TDJobFlXUStDanhpYjJSNVBnb0tQSFJoWW14bElHbGtQU0owTURFaVBnb2dJRHgwY2o0S0lDQWdJRHgwWkQ0bUl6TXhORFE1T3lZak1qRTFNVGM3UEM5MFpENEtJQ0FnSUR4MFpENG1JekkwTkRZME95WWpNamMzTURBN1BDOTBaRDRLSUNBOEwzUnlQZ29nSUR4MGNqNEtJQ0FnSUR4MFpENG1Jekl4TXpBMk95WWpNekUwTkRrN0ppTXlNVFE1TlRzOEwzUmtQZ29nSUNBZ1BIUmtQalUwTmpBeFBDOTBaRDRLSUNBOEwzUnlQZ29nSUR4MGNqNEtJQ0FnSUR4MFpENG1Jek0xTWpZMk95WWpNamM1TnprN0ppTXlNak16TURzbUl6STFNekF3T3lZak1qZ3dNak03SmlNek9UWTBNRHNtSXpJME1qTXdPeVlqTmpVeU9EZzdKaU16TVRnMU9Uc21JelkxTWpnNU96d3ZkR1ErQ2lBZ0lDQThkR1ErTVRNdU1Ud3ZkR1ErQ2lBZ1BDOTBjajRLUEM5MFlXSnNaVDRLUEM5aWIyUjVQZ284TDJoMGJXdytDaUFnSUNBZ0lDQWdDaUFnSUNBZ0lDQWciIHdpZHRoPSIzMTAiIGhlaWdodD0iMTMwIj48L2lmcmFtZT4nKVswXTsKICAgICAgICAgICAgICAgIHBvcHVwXzBkODFhOGYzMWUwZDQzMzU5Y2JlODIwZmZkN2U2OTkzLnNldENvbnRlbnQoaV9mcmFtZV8zNDE2YTQxMjcyZDk0ZDZkOWM4ODdhNDdkNDBlMDUxZSk7CiAgICAgICAgICAgIAoKICAgICAgICAgICAgbWFya2VyXzJkMWNjMTJkZTYyNDQ1ODJiZTMxYzI5YzE3NmQxMmRhLmJpbmRQb3B1cChwb3B1cF8wZDgxYThmMzFlMGQ0MzM1OWNiZTgyMGZmZDdlNjk5Myk7CgogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCgogICAgICAgICAgICB2YXIgbWFya2VyXzFhMGEzNTUyYzc2OTRiMGFhOWE2NjM4YzA5MWE1NDU2ID0gTC5tYXJrZXIoCiAgICAgICAgICAgICAgICBbMzguNzIsMTE1Ljc3XSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXBfYjQxZDY2OWNjNWMzNDM5YjljYzFkZGY5M2ZkYmI2NzApOwogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgICAgIHZhciBwb3B1cF80Yzg1OWI4ZjY4ZjI0NTQxOGU0ZWFiNmE3Mjg2NTliMyA9IEwucG9wdXAoe21heFdpZHRoOiAnNDAwJ30pOwoKICAgICAgICAgICAgCiAgICAgICAgICAgICAgICB2YXIgaV9mcmFtZV84YzRmYjNiODdhYTQ0MzlkOWM3NjdjMTY1NDA0ODM3YSA9ICQoJzxpZnJhbWUgc3JjPSJkYXRhOnRleHQvaHRtbDtiYXNlNjQsQ2lBZ0lDQWdJQ0FnQ2lBZ0lDQWdJQ0FnSUNBZ0lBbzhJVVJQUTFSWlVFVWdhSFJ0YkQ0S1BHaDBiV3crQ2p4b1pXRmtQZ284YzNSNWJHVStDblJoWW14bElIc0tJQ0FnSUhkcFpIUm9PakV3TUNVN0NuMEtkR0ZpYkdVc0lIUm9MQ0IwWkNCN0NpQWdJQ0JpYjNKa1pYSTZJREZ3ZUNCemIyeHBaQ0JpYkdGamF6c0tJQ0FnSUdKdmNtUmxjaTFqYjJ4c1lYQnpaVG9nWTI5c2JHRndjMlU3Q24wS2RHZ3NJSFJrSUhzS0lDQWdJSEJoWkdScGJtYzZJRFZ3ZURzS0lDQWdJSFJsZUhRdFlXeHBaMjQ2SUd4bFpuUTdDbjBLZEdGaWJHVWpkREF4SUhSeU9tNTBhQzFqYUdsc1pDaHZaR1FwSUhzS0lDQWdJR0poWTJ0bmNtOTFibVF0WTI5c2IzSTZJQ05sWldVN0NuMEtkR0ZpYkdVamREQXhJSFJ5T201MGFDMWphR2xzWkNobGRtVnVLU0I3Q2lBZ0lHSmhZMnRuY205MWJtUXRZMjlzYjNJNkkyWm1aanNLZlFvOEwzTjBlV3hsUGdvOEwyaGxZV1ErQ2p4aWIyUjVQZ29LUEhSaFlteGxJR2xrUFNKME1ERWlQZ29nSUR4MGNqNEtJQ0FnSUR4MFpENG1Jek14TkRRNU95WWpNakUxTVRjN1BDOTBaRDRLSUNBZ0lEeDBaRDRtSXpNNU5qUXdPeVlqTXpnME5URTdQQzkwWkQ0S0lDQThMM1J5UGdvZ0lEeDBjajRLSUNBZ0lEeDBaRDRtSXpJeE16QTJPeVlqTXpFME5EazdKaU15TVRRNU5UczhMM1JrUGdvZ0lDQWdQSFJrUGpVME5qQXpQQzkwWkQ0S0lDQThMM1J5UGdvZ0lEeDBjajRLSUNBZ0lEeDBaRDRtSXpNMU1qWTJPeVlqTWpjNU56azdKaU15TWpNek1Ec21JekkxTXpBd095WWpNamd3TWpNN0ppTXpPVFkwTURzbUl6STBNak13T3lZak5qVXlPRGc3SmlNek1UZzFPVHNtSXpZMU1qZzVPend2ZEdRK0NpQWdJQ0E4ZEdRK01UQXVNRHd2ZEdRK0NpQWdQQzkwY2o0S1BDOTBZV0pzWlQ0S1BDOWliMlI1UGdvOEwyaDBiV3crQ2lBZ0lDQWdJQ0FnQ2lBZ0lDQWdJQ0FnIiB3aWR0aD0iMzEwIiBoZWlnaHQ9IjEzMCI+PC9pZnJhbWU+JylbMF07CiAgICAgICAgICAgICAgICBwb3B1cF80Yzg1OWI4ZjY4ZjI0NTQxOGU0ZWFiNmE3Mjg2NTliMy5zZXRDb250ZW50KGlfZnJhbWVfOGM0ZmIzYjg3YWE0NDM5ZDljNzY3YzE2NTQwNDgzN2EpOwogICAgICAgICAgICAKCiAgICAgICAgICAgIG1hcmtlcl8xYTBhMzU1MmM3Njk0YjBhYTlhNjYzOGMwOTFhNTQ1Ni5iaW5kUG9wdXAocG9wdXBfNGM4NTliOGY2OGYyNDU0MThlNGVhYjZhNzI4NjU5YjMpOwoKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl84NzhmNTJkNmFlZDY0MTc2YjIxYWJkOTMyN2M1ZWEzMiA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM5LjMsMTE2LjQ4XSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBpY29uOiBuZXcgTC5JY29uLkRlZmF1bHQoKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5hZGRUbyhtYXBfYjQxZDY2OWNjNWMzNDM5YjljYzFkZGY5M2ZkYmI2NzApOwogICAgICAgICAgICAKICAgICAgICAKICAgICAgICAgICAgCiAgICAgICAgICAgIHZhciBwb3B1cF85ZDI3OGQ4NjY3Mjg0NDRmYjBhOGE5N2ViODUxN2MxMSA9IEwucG9wdXAoe21heFdpZHRoOiAnNDAwJ30pOwoKICAgICAgICAgICAgCiAgICAgICAgICAgICAgICB2YXIgaV9mcmFtZV9jYzVlNmUyOGY2Nzc0YWFiYTVmZjAxYjZkMzMwNDhlNyA9ICQoJzxpZnJhbWUgc3JjPSJkYXRhOnRleHQvaHRtbDtiYXNlNjQsQ2lBZ0lDQWdJQ0FnQ2lBZ0lDQWdJQ0FnSUNBZ0lBbzhJVVJQUTFSWlVFVWdhSFJ0YkQ0S1BHaDBiV3crQ2p4b1pXRmtQZ284YzNSNWJHVStDblJoWW14bElIc0tJQ0FnSUhkcFpIUm9PakV3TUNVN0NuMEtkR0ZpYkdVc0lIUm9MQ0IwWkNCN0NpQWdJQ0JpYjNKa1pYSTZJREZ3ZUNCemIyeHBaQ0JpYkdGamF6c0tJQ0FnSUdKdmNtUmxjaTFqYjJ4c1lYQnpaVG9nWTI5c2JHRndjMlU3Q24wS2RHZ3NJSFJrSUhzS0lDQWdJSEJoWkdScGJtYzZJRFZ3ZURzS0lDQWdJSFJsZUhRdFlXeHBaMjQ2SUd4bFpuUTdDbjBLZEdGaWJHVWpkREF4SUhSeU9tNTBhQzFqYUdsc1pDaHZaR1FwSUhzS0lDQWdJR0poWTJ0bmNtOTFibVF0WTI5c2IzSTZJQ05sWldVN0NuMEtkR0ZpYkdVamREQXhJSFJ5T201MGFDMWphR2xzWkNobGRtVnVLU0I3Q2lBZ0lHSmhZMnRuY205MWJtUXRZMjlzYjNJNkkyWm1aanNLZlFvOEwzTjBlV3hsUGdvOEwyaGxZV1ErQ2p4aWIyUjVQZ29LUEhSaFlteGxJR2xrUFNKME1ERWlQZ29nSUR4MGNqNEtJQ0FnSUR4MFpENG1Jek14TkRRNU95WWpNakUxTVRjN1BDOTBaRDRLSUNBZ0lEeDBaRDRtSXpJM056QTBPeVlqTWpneE5qVTdQQzkwWkQ0S0lDQThMM1J5UGdvZ0lEeDBjajRLSUNBZ0lEeDBaRDRtSXpJeE16QTJPeVlqTXpFME5EazdKaU15TVRRNU5UczhMM1JrUGdvZ0lDQWdQSFJrUGpVME5URTVQQzkwWkQ0S0lDQThMM1J5UGdvZ0lEeDBjajRLSUNBZ0lEeDBaRDRtSXpNMU1qWTJPeVlqTWpjNU56azdKaU15TWpNek1Ec21JekkxTXpBd095WWpNamd3TWpNN0ppTXpPVFkwTURzbUl6STBNak13T3lZak5qVXlPRGc3SmlNek1UZzFPVHNtSXpZMU1qZzVPend2ZEdRK0NpQWdJQ0E4ZEdRK01USXVNand2ZEdRK0NpQWdQQzkwY2o0S1BDOTBZV0pzWlQ0S1BDOWliMlI1UGdvOEwyaDBiV3crQ2lBZ0lDQWdJQ0FnQ2lBZ0lDQWdJQ0FnIiB3aWR0aD0iMzEwIiBoZWlnaHQ9IjEzMCI+PC9pZnJhbWU+JylbMF07CiAgICAgICAgICAgICAgICBwb3B1cF85ZDI3OGQ4NjY3Mjg0NDRmYjBhOGE5N2ViODUxN2MxMS5zZXRDb250ZW50KGlfZnJhbWVfY2M1ZTZlMjhmNjc3NGFhYmE1ZmYwMWI2ZDMzMDQ4ZTcpOwogICAgICAgICAgICAKCiAgICAgICAgICAgIG1hcmtlcl84NzhmNTJkNmFlZDY0MTc2YjIxYWJkOTMyN2M1ZWEzMi5iaW5kUG9wdXAocG9wdXBfOWQyNzhkODY2NzI4NDQ0ZmIwYThhOTdlYjg1MTdjMTEpOwoKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIAoKICAgICAgICAgICAgdmFyIG1hcmtlcl81MmY2MjU3NTg4YzI0YmM3ODRlMTQ3NzQ1NjUzOGI2NCA9IEwubWFya2VyKAogICAgICAgICAgICAgICAgWzM5LjQyLDExNi4yOF0sCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgaWNvbjogbmV3IEwuSWNvbi5EZWZhdWx0KCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAuYWRkVG8obWFwX2I0MWQ2NjljYzVjMzQzOWI5Y2MxZGRmOTNmZGJiNjcwKTsKICAgICAgICAgICAgCiAgICAgICAgCiAgICAgICAgICAgIAogICAgICAgICAgICB2YXIgcG9wdXBfYzZjMzYxMzE5ZWFjNGIxN2FlOWQ4ZWY1Y2Q3MWRmNTcgPSBMLnBvcHVwKHttYXhXaWR0aDogJzQwMCd9KTsKCiAgICAgICAgICAgIAogICAgICAgICAgICAgICAgdmFyIGlfZnJhbWVfZTNkMzM5ZTM1ZGU0NDNkYTgxODU3NGY2ZWFhYWY4NzQgPSAkKCc8aWZyYW1lIHNyYz0iZGF0YTp0ZXh0L2h0bWw7YmFzZTY0LENpQWdJQ0FnSUNBZ0NpQWdJQ0FnSUNBZ0lDQWdJQW84SVVSUFExUlpVRVVnYUhSdGJENEtQR2gwYld3K0NqeG9aV0ZrUGdvOGMzUjViR1UrQ25SaFlteGxJSHNLSUNBZ0lIZHBaSFJvT2pFd01DVTdDbjBLZEdGaWJHVXNJSFJvTENCMFpDQjdDaUFnSUNCaWIzSmtaWEk2SURGd2VDQnpiMnhwWkNCaWJHRmphenNLSUNBZ0lHSnZjbVJsY2kxamIyeHNZWEJ6WlRvZ1kyOXNiR0Z3YzJVN0NuMEtkR2dzSUhSa0lIc0tJQ0FnSUhCaFpHUnBibWM2SURWd2VEc0tJQ0FnSUhSbGVIUXRZV3hwWjI0NklHeGxablE3Q24wS2RHRmliR1VqZERBeElIUnlPbTUwYUMxamFHbHNaQ2h2WkdRcElIc0tJQ0FnSUdKaFkydG5jbTkxYm1RdFkyOXNiM0k2SUNObFpXVTdDbjBLZEdGaWJHVWpkREF4SUhSeU9tNTBhQzFqYUdsc1pDaGxkbVZ1S1NCN0NpQWdJR0poWTJ0bmNtOTFibVF0WTI5c2IzSTZJMlptWmpzS2ZRbzhMM04wZVd4bFBnbzhMMmhsWVdRK0NqeGliMlI1UGdvS1BIUmhZbXhsSUdsa1BTSjBNREVpUGdvZ0lEeDBjajRLSUNBZ0lEeDBaRDRtSXpNeE5EUTVPeVlqTWpFMU1UYzdQQzkwWkQ0S0lDQWdJRHgwWkQ0bUl6SXlNalkyT3lZak1qTTBNek03UEM5MFpENEtJQ0E4TDNSeVBnb2dJRHgwY2o0S0lDQWdJRHgwWkQ0bUl6SXhNekEyT3lZak16RTBORGs3SmlNeU1UUTVOVHM4TDNSa1Bnb2dJQ0FnUEhSa1BqVTBOVEV5UEM5MFpENEtJQ0E4TDNSeVBnb2dJRHgwY2o0S0lDQWdJRHgwWkQ0bUl6TTFNalkyT3lZak1qYzVOems3SmlNeU1qTXpNRHNtSXpJMU16QXdPeVlqTWpnd01qTTdKaU16T1RZME1Ec21JekkwTWpNd095WWpOalV5T0RnN0ppTXpNVGcxT1RzbUl6WTFNamc1T3p3dmRHUStDaUFnSUNBOGRHUStNakV1TkR3dmRHUStDaUFnUEM5MGNqNEtQQzkwWVdKc1pUNEtQQzlpYjJSNVBnbzhMMmgwYld3K0NpQWdJQ0FnSUNBZ0NpQWdJQ0FnSUNBZyIgd2lkdGg9IjMxMCIgaGVpZ2h0PSIxMzAiPjwvaWZyYW1lPicpWzBdOwogICAgICAgICAgICAgICAgcG9wdXBfYzZjMzYxMzE5ZWFjNGIxN2FlOWQ4ZWY1Y2Q3MWRmNTcuc2V0Q29udGVudChpX2ZyYW1lX2UzZDMzOWUzNWRlNDQzZGE4MTg1NzRmNmVhYWFmODc0KTsKICAgICAgICAgICAgCgogICAgICAgICAgICBtYXJrZXJfNTJmNjI1NzU4OGMyNGJjNzg0ZTE0Nzc0NTY1MzhiNjQuYmluZFBvcHVwKHBvcHVwX2M2YzM2MTMxOWVhYzRiMTdhZTlkOGVmNWNkNzFkZjU3KTsKCiAgICAgICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgIAogICAgICAgIDwvc2NyaXB0PgogICAgICAgIA==" style="position:absolute;width:100%;height:100%;left:0;top:0;"&gt;&lt;/iframe&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [ ]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt; 
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+</description><guid>https://yafei777.github.io/Yafei-blog/blog/folium-popup/</guid><pubDate>Wed, 12 Apr 2017 08:26:41 GMT</pubDate></item><item><title>各种格式地理信息数据读取和显示</title><link>https://yafei777.github.io/Yafei-blog/blog/ge-chong-ge-shi-di-li-xin-xi-shu-ju-du-qu-he-xian-shi/</link><dc:creator>Yafei Li</dc:creator><description>&lt;div tabindex="-1" id="notebook" class="border-box-sizing"&gt;
     &lt;div class="container" id="notebook-container"&gt;
 
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;
